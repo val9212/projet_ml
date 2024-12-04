@@ -61,13 +61,6 @@ class PhraseEndPredictor:
         """
         print("Cleaning dataset...")
 
-        # Remove columns that are not useful for prediction (metadata, junk)
-        # For example, remove columns that are all NaN or have a single unique value
-        nunique = data.nunique()
-        cols_to_drop = nunique[nunique <= 1].index.tolist()
-        print(f"Dropping columns with a single unique value: {cols_to_drop}")
-        data.drop(columns=cols_to_drop, inplace=True)
-
         # Remove columns with a high percentage of missing values
         missing = data.isnull().mean()
         cols_with_missing = missing[missing > 0.5].index.tolist()
@@ -221,6 +214,10 @@ class PhraseEndPredictor:
         self.features = np.array(feature_arrays)
         self.labels = np.array(labels)
         self.ids = np.array(ids)
+
+        if np.isnan(self.features).any():
+            print("Imputing NaN values with zero.")
+            self.features = np.nan_to_num(self.features, nan=0.0)
 
         # Encode labels
         print("Encoding labels...")
