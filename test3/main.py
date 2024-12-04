@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 
 
 def main():
-    # Set up logging
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -21,9 +20,8 @@ def main():
     )
     logger = logging.getLogger("Main")
 
-    # Initialize DataProcessor
     dataset_path = "MTC-FS-INST-2.0"
-    window_size = 8  # You can experiment with different window sizes
+    window_size = 8
     data_processor = DataProcessor(dataset_path, window_size=window_size)
     data_processor.clean_data()
     data_processor.create_subsequences()
