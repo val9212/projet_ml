@@ -147,6 +147,7 @@ class PhraseEndPredictor:
         self.subsequences = pd.DataFrame(subsequences)
         self.subsequences["id"] = ids
         self.subsequences["label"] = labels
+        print(self.subsequences.head())
         print(f"Created {len(self.subsequences)} subsequences.")
 
     def preprocess_features(self):
