@@ -1,0 +1,158 @@
+C:\Users\Valentin\AppData\Local\Microsoft\WindowsApps\python3.9.exe C:\Users\Valentin\PycharmProjects\projet_ml\UNDERCOOKED\main.py
+2024-12-04 12:08:54,114 [INFO] DataProcessor: Loading data...
+2024-12-04 12:08:54,117 [INFO] DataProcessor: Converting sequences into a DataFrame...
+Processing sequences: 18109it [00:09, 1859.41it/s]
+2024-12-04 12:09:03,994 [INFO] DataProcessor: DataFrame created with shape (18109, 62).
+2024-12-04 12:09:04,029 [INFO] DataProcessor: Cleaning data...
+2024-12-04 12:09:04,217 [INFO] DataProcessor: Columns kept after removing those with >50% missing values: ['id', 'scaledegree', 'scaledegreespecifier', 'tonic', 'mode', 'metriccontour', 'imaweight', 'pitch40', 'midipitch', 'diatonicpitch', 'diatonicinterval', 'chromaticinterval', 'pitchproximity', 'pitchreversal', 'nextisrest', 'restduration_frac', 'duration', 'duration_frac', 'duration_fullname', 'onsettick', 'beatfraction', 'phrasepos', 'phrase_ix', 'phrase_end', 'songpos', 'beatinsong', 'beatinphrase', 'beatinphrase_end', 'IOI_frac', 'IOI', 'IOR', 'imacontour', 'pitch', 'contour3', 'contour5', 'beatstrength', 'beat_str', 'beat_fraction_str', 'beat', 'timesignature', 'gpr2a_Frankland', 'gpr2b_Frankland', 'gpr3a_Frankland', 'gpr3d_Frankland', 'gpr_Frankland_sum', 'lbdm_spitch', 'lbdm_sioi', 'lbdm_srest', 'lbdm_rpitch', 'lbdm_rioi', 'lbdm_rrest', 'lbdm_boundarystrength', 'durationcontour', 'IOR_frac']
+2024-12-04 12:09:04,310 [INFO] DataProcessor: Data shape after removing rows with None in critical columns: (18109, 54)
+2024-12-04 12:09:04,497 [INFO] DataProcessor: Creating subsequences...
+2024-12-04 12:09:04,497 [INFO] DataProcessor: Identifying list-type columns...
+2024-12-04 12:09:04,706 [INFO] DataProcessor: List columns identified: ['scaledegree', 'scaledegreespecifier', 'tonic', 'mode', 'metriccontour', 'imaweight', 'pitch40', 'midipitch', 'diatonicpitch', 'diatonicinterval', 'chromaticinterval', 'pitchproximity', 'pitchreversal', 'nextisrest', 'restduration_frac', 'duration', 'duration_frac', 'duration_fullname', 'onsettick', 'beatfraction', 'phrasepos', 'phrase_ix', 'phrase_end', 'songpos', 'beatinsong', 'beatinphrase', 'beatinphrase_end', 'IOI_frac', 'IOI', 'IOR', 'imacontour', 'pitch', 'contour3', 'contour5', 'beatstrength', 'beat_str', 'beat_fraction_str', 'beat', 'timesignature', 'gpr2a_Frankland', 'gpr2b_Frankland', 'gpr3a_Frankland', 'gpr3d_Frankland', 'gpr_Frankland_sum', 'lbdm_spitch', 'lbdm_sioi', 'lbdm_srest', 'lbdm_rpitch', 'lbdm_rioi', 'lbdm_rrest', 'lbdm_boundarystrength', 'durationcontour', 'IOR_frac']
+Creating subsequences: 100%|██████████| 18109/18109 [00:24<00:00, 753.55it/s]
+2024-12-04 12:09:29,390 [INFO] DataProcessor: Created 154153 subsequences.
+2024-12-04 12:09:29,585 [INFO] DataProcessor: Preprocessing features...
+2024-12-04 12:09:29,585 [INFO] DataProcessor: Selected feature columns: ['scaledegree', 'duration', 'midipitch', 'beatstrength']
+Processing subsequences: 100%|██████████| 154153/154153 [00:05<00:00, 28755.27it/s]
+2024-12-04 12:09:35,172 [INFO] DataProcessor: Encoding labels...
+2024-12-04 12:09:35,175 [INFO] DataProcessor: Standardizing features...
+2024-12-04 12:09:35,247 [INFO] DataProcessor: Feature array shape: (154153, 32)
+2024-12-04 12:09:35,247 [INFO] DataProcessor: Labels array shape: (154153,)
+2024-12-04 12:09:35,373 [INFO] ModelTrainer: Splitting data into training and testing sets...
+2024-12-04 12:09:35,463 [INFO] ModelTrainer: Training set shape: (123322, 32)
+2024-12-04 12:09:35,463 [INFO] ModelTrainer: Testing set shape: (30831, 32)
+2024-12-04 12:09:35,463 [INFO] ModelTrainer: Training model: KNeighborsClassifier
+2024-12-04 12:09:35,471 [INFO] ModelTrainer: Model training completed for KNeighborsClassifier.
+2024-12-04 12:09:35,471 [INFO] ModelTrainer: Evaluating model: KNeighborsClassifier
+
+Model: KNeighborsClassifier
+Classification Report:
+2024-12-04 12:09:37,916 [INFO] ModelTrainer: Evaluation completed for KNeighborsClassifier.
+2024-12-04 12:09:37,946 [INFO] ModelTrainer: Training model: DecisionTreeClassifier
+              precision    recall  f1-score   support
+
+           0       0.93      0.97      0.95     27564
+           1       0.62      0.40      0.48      3267
+
+    accuracy                           0.91     30831
+   macro avg       0.78      0.68      0.72     30831
+weighted avg       0.90      0.91      0.90     30831
+
+Confusion Matrix:
+[[26784   780]
+ [ 1976  1291]]
+2024-12-04 12:09:38,878 [INFO] ModelTrainer: Model training completed for DecisionTreeClassifier.
+2024-12-04 12:09:38,878 [INFO] ModelTrainer: Evaluating model: DecisionTreeClassifier
+
+Model: DecisionTreeClassifier
+Classification Report:
+2024-12-04 12:09:38,908 [INFO] ModelTrainer: Evaluation completed for DecisionTreeClassifier.
+2024-12-04 12:09:38,932 [INFO] ModelTrainer: Training model: SGDClassifier
+              precision    recall  f1-score   support
+
+           0       0.94      0.94      0.94     27564
+           1       0.52      0.53      0.53      3267
+
+    accuracy                           0.90     30831
+   macro avg       0.73      0.74      0.73     30831
+weighted avg       0.90      0.90      0.90     30831
+
+Confusion Matrix:
+[[25987  1577]
+ [ 1537  1730]]
+2024-12-04 12:09:39,296 [INFO] ModelTrainer: Model training completed for SGDClassifier.
+2024-12-04 12:09:39,297 [INFO] ModelTrainer: Evaluating model: SGDClassifier
+2024-12-04 12:09:39,323 [INFO] ModelTrainer: Evaluation completed for SGDClassifier.
+
+Model: SGDClassifier
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.91      0.99      0.95     27564
+           1       0.79      0.21      0.34      3267
+
+    accuracy                           0.91     30831
+   macro avg       0.85      0.60      0.64     30831
+weighted avg       0.90      0.91      0.89     30831
+
+Confusion Matrix:
+[[27374   190]
+ [ 2567   700]]
+2024-12-04 12:09:39,344 [INFO] ModelTrainer: Training model: LogisticRegression
+2024-12-04 12:09:39,468 [INFO] ModelTrainer: Model training completed for LogisticRegression.
+2024-12-04 12:09:39,468 [INFO] ModelTrainer: Evaluating model: LogisticRegression
+
+Model: LogisticRegression
+Classification Report:
+2024-12-04 12:09:39,493 [INFO] ModelTrainer: Evaluation completed for LogisticRegression.
+2024-12-04 12:09:39,515 [INFO] ModelTrainer: Training model: SVC
+              precision    recall  f1-score   support
+
+           0       0.92      0.98      0.95     27564
+           1       0.70      0.32      0.44      3267
+
+    accuracy                           0.91     30831
+   macro avg       0.81      0.65      0.70     30831
+weighted avg       0.90      0.91      0.90     30831
+
+Confusion Matrix:
+[[27121   443]
+ [ 2213  1054]]
+2024-12-04 12:14:14,950 [INFO] ModelTrainer: Model training completed for SVC.
+2024-12-04 12:14:14,951 [INFO] ModelTrainer: Evaluating model: SVC
+2024-12-04 12:15:30,037 [INFO] ModelTrainer: Evaluation completed for SVC.
+
+Model: SVC
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.93      0.99      0.96     27564
+           1       0.80      0.35      0.49      3267
+
+    accuracy                           0.92     30831
+   macro avg       0.87      0.67      0.72     30831
+weighted avg       0.91      0.92      0.91     30831
+
+Confusion Matrix:
+[[27289   275]
+ [ 2133  1134]]
+2024-12-04 12:15:30,059 [INFO] ModelTrainer: Training model: GaussianNB
+2024-12-04 12:15:30,122 [INFO] ModelTrainer: Model training completed for GaussianNB.
+2024-12-04 12:15:30,122 [INFO] ModelTrainer: Evaluating model: GaussianNB
+
+Model: GaussianNB
+Classification Report:
+2024-12-04 12:15:30,158 [INFO] ModelTrainer: Evaluation completed for GaussianNB.
+              precision    recall  f1-score   support
+
+           0       0.93      0.96      0.94     27564
+           1       0.52      0.37      0.44      3267
+
+    accuracy                           0.90     30831
+   macro avg       0.73      0.67      0.69     30831
+weighted avg       0.89      0.90      0.89     30831
+
+Confusion Matrix:
+[[26452  1112]
+ [ 2046  1221]]
+2024-12-04 12:15:30,180 [INFO] ModelTrainer: Training model: RandomForestClassifier
+2024-12-04 12:15:42,963 [INFO] ModelTrainer: Model training completed for RandomForestClassifier.
+2024-12-04 12:15:42,963 [INFO] ModelTrainer: Evaluating model: RandomForestClassifier
+
+Model: RandomForestClassifier
+Classification Report:
+2024-12-04 12:15:43,381 [INFO] ModelTrainer: Evaluation completed for RandomForestClassifier.
+              precision    recall  f1-score   support
+
+           0       0.94      0.99      0.96     27564
+           1       0.84      0.43      0.57      3267
+
+    accuracy                           0.93     30831
+   macro avg       0.89      0.71      0.77     30831
+weighted avg       0.93      0.93      0.92     30831
+
+Confusion Matrix:
+[[27289   275]
+ [ 1853  1414]]
+
+Process finished with exit code 0
