@@ -180,32 +180,47 @@ class PhraseEndPredictor:
 
                 # Check if values are lists
                 if isinstance(values, list):
+                    # Handle missing values in the list
+                    values = [v if v is not None else "Unknown" for v in values]
+
                     # If values are categorical (non-numeric), encode them
                     if all(isinstance(v, str) for v in values):
                         # Encode categorical features
                         encoder = LabelEncoder()
                         try:
                             encoded_values = encoder.fit_transform(values)
-                        except:
-                            encoded_values = [0] * len(
-                                values
-                            )  # Handle unexpected values
+                        except Exception as e:
+                            print(f"Encoding error in column {col}: {e}")
+                            encoded_values = [0] * len(values)  # Default encoding
                         feature_vector.extend(encoded_values)
                     else:
-                        # Assume numerical values
-                        feature_vector.extend(values)
+                        # Convert values to float, handling exceptions
+                        numeric_values = []
+                        for v in values:
+                            try:
+                                numeric_values.append(float(v))
+                            except (ValueError, TypeError):
+                                numeric_values.append(0.0)
+                        feature_vector.extend(numeric_values)
                 else:
-                    # Single value, check if it's categorical
+                    # Handle single values
+                    if values is None:
+                        values = "Unknown"
+
                     if isinstance(values, str):
                         # Encode categorical features
                         encoder = LabelEncoder()
                         try:
                             encoded_value = encoder.fit_transform([values])[0]
-                        except:
+                        except Exception as e:
+                            print(f"Encoding error in column {col}: {e}")
                             encoded_value = 0
                         feature_vector.append(encoded_value)
                     else:
-                        feature_vector.append(values)
+                        try:
+                            feature_vector.append(float(values))
+                        except (ValueError, TypeError):
+                            feature_vector.append(0.0)
 
             feature_arrays.append(feature_vector)
             labels.append(row["label"])
@@ -216,6 +231,8 @@ class PhraseEndPredictor:
         self.labels = np.array(labels)
         self.ids = np.array(ids)
 
+        # Check for NaNs
+        print(f"Number of NaN values in features: {np.isnan(self.features).sum()}")
         if np.isnan(self.features).any():
             print("Imputing NaN values with zero.")
             self.features = np.nan_to_num(self.features, nan=0.0)
