@@ -34,9 +34,9 @@ def main():
         (DecisionTreeClassifier(), "DecisionTreeClassifier"),
         (SGDClassifier(), "SGDClassifier"),
         (LogisticRegression(), "LogisticRegression"),
-        (SVC(), "SVC"),
         (GaussianNB(), "GaussianNB"),
         (RandomForestClassifier(),"RandomForestClassifier",),
+        #(SVC(), "SVC")
     ]
 
     for model, name in models:
@@ -49,18 +49,24 @@ def main():
     model_names = []
     f1_scores = []
     for name, result in model_trainer.results.items():
-        f1_score = result["classification_report"]["weighted avg"]["f1-score"]
+        f1_score = result["classification_report"]["macro avg"]["f1-score"]
         model_names.append(name)
         f1_scores.append(f1_score)
 
-    # Plot the F1-scores of the models
     plt.figure(figsize=(10, 6))
-    plt.bar(model_names, f1_scores, color="skyblue")
-    plt.xlabel("Model")
-    plt.ylabel("Weighted F1-Score")
-    plt.title("Model Comparison")
-    plt.xticks(rotation=45)
-    plt.tight_layout()
+    plt.barh(model_names, f1_scores)
+
+    # Ajout des labels et du titre
+    plt.xlabel('F1-Score (macro avg)')
+    plt.ylabel('Modèles')
+    plt.title('F1-Score (macro avg) pour chaque modèle')
+
+    # Annotation des scores sur chaque barre
+    for index, score in enumerate(f1_scores):
+        plt.text(score + 0.01, index, f'{score:.2f}', va='center')
+
+    # Affichage du graphique
+    plt.grid(axis='x', linestyle='--', alpha=0.7)
     plt.show()
 
 

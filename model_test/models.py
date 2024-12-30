@@ -22,6 +22,7 @@ class ModelTrainer:
         self.ids = ids
         self.models = []
         self.results = {}
+        self.confusion_matrices = []
 
     def split_data(self):
         """
@@ -33,7 +34,6 @@ class ModelTrainer:
             self.features,
             self.labels,
             test_size= 1/3,
-            random_state=42,
             stratify=self.labels
         )
 
@@ -76,7 +76,8 @@ class ModelTrainer:
         print(classification_report(self.y_test, y_pred))
         print("Confusion Matrix:")
         print(cm)
+        self.confusion_matrices.append((cm, name))
         ConfusionMatrixDisplay(cm).plot()
-        plt.savefig(f"results/confusion_matrix_{model}.png")
+        plt.savefig(f"results/confusion_matrix_2{name}.png")
         RocCurveDisplay.from_estimator(model, self.X_test, self.y_test)
-        plt.savefig(f"results/roc_curve_{model}.png")
+        plt.savefig(f"results/roc_curve_2{name}.png")

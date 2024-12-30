@@ -9,6 +9,8 @@ Ainsi, l'objectif de ce projet est de préparer des données, les explorer, cons
 
 ## MATERIELS : 
 
+### Jeu de données
+
 Pour répondre aux objectifs de ce projet, nous avons récupéré des données issues du Meertens Tune Collections 1. C’est
 un corpus de mélodies des Pays-Bas annotés par un ensemble d'attributs : 
 Un objet mélodique contient des champs de métadonnées et plusieurs séquences de valeurs de caractéristiques.
@@ -90,6 +92,30 @@ Les séquences caractéristiques correspondent aux séquences de notes dans une 
 > - **rhymes** `(bool)` : Indique si le mot qui se termine sur cette note rime avec un autre mot dans les paroles de la chanson (Cette donnée est utilisée uniquement pour la première note d’un mélisme vocal).
 > - **rhymescontentwords** `(bool)` : Indique si le mot qui se termine sur cette note rime avec un autre mot (en excluant les mots fonctionnels) dans les paroles de la chanson (Elle est utilisée uniquement pour la première note d’un mélisme vocal).
 
+### Modeles 
+
+Pour réaliser se projet, nous allons nous limiter au test d'un nombre limité de modeles. Nous allons travailler sur des modèles vue en cours, et le modèle RandomForestClassifier.
+
+- **KNeighborsClassifier**: Classifie un point en fonction des classes majoritaires de ses k-plus proches voisins, idéal pour des frontières complexes, mais sensible aux dimensions élevées.
+- **DecisionTreeClassifier**: Utilise une structure arborescente pour diviser les données selon les caractéristiques les plus informatives, facile à interpréter, mais sujette au surapprentissage.
+- **SGDClassifier**: Implémente une descente de gradient stochastique pour des modèles linéaires, efficace pour les grands volumes de données et des flux de données en continu.
+- **LogisticRegression**: Modèle linéaire qui prédit des probabilités pour des classes, bien adapté aux problèmes binaires et robustes avec régularisation.
+- **SVC**: Utilise des marges maximales pour classifier des données, efficace pour les problèmes non linéaires grâce à des noyaux, mais coûteux en temps et mémoire.
+- **GaussianNB**: Classificateur bayésien qui suppose des distributions normales pour chaque caractéristique, rapide et performant avec des hypothèses simplifiées.
+- **RandomForestClassifier**: Ensemble d'arbres de décision entraînés sur des sous-échantillons aléatoires, robuste au surapprentissage et performant sur des jeux de données variés.
+
+Avant de valider nous allons realiser une verification du temps d'execution de l'entrainement et du test de ces modeles.
+
+![graphe representant le temps d'entrainement des modeles](/Visualisation/entrainement.png)
+
+Ce graphe nous permet de constater que les modeles prennent tous en moyenne le meme temps pour s'entrainer sur les données. Les modeles KNeighborsClassifier et GaussianNB sont les plus rapide.
+
+
+![graphe representant le temps de test des modeles](/Visualisation/test.png)
+
+Ce graphe nous permet de constater que le modèle SVC prend beaucoup plus de temps à exécuter le test. Nous pouvons l'expliquer, car il a une complexité de O(n²).
+Afin d'éviter des temps d'exécution trop longs, nous n'allons donc pas le garder pour la suite de nos tests.
+
 ## METHODOLOGIE : 
 
 ### 1) Exploration des données (exploration.ipynb): 
@@ -114,7 +140,7 @@ Nous pouvons constater que la taille des phrases dans les séquences du jeu de d
 
 Nous avons aussi analysé la taille des séquences, avec une représentation graphique.
 
-![Texte alternatif](/Visualisation/graphe_tailles_seqs.png)
+![graphe representant la taille des sequences](/Visualisation/graphe_tailles_seqs.png)
 
 En rentrant plus dans le détail, nous pouvons voir que les séquences font:
 - En moyenne 72 notes.
@@ -123,10 +149,10 @@ En rentrant plus dans le détail, nous pouvons voir que les séquences font:
 
 Classification des features catégorielles et numériques qu'il nous reste:
 
-- numérique : 'scaledegree', 'imaweigth', 'pitch40', 'midipitch', 'diatonicpitch', 'diatonicinterval', 'chromaticinterval', 'pitchproximity', 'pitchreversal', 'duration', 'onsettick', 'phrasepos', 'phrase_ix', 'songpos', 'IOI', 'IOR', 'beatstrength', 'beat_str', 'beat', 'timesignature', 'gpr2a_Frankland', 'gpr2b_Frankland', 'gpr3a_Frankland', 'gpr3d_Frankland', 'gpr_Frankland_sum', 'lbdm_spitch', 'lbdm_sioi', 'lbdm_srest', 'lbdm_rpitch', 'lbdm_rioi', 'lbdm_rrest', 'lbdm_boundarystrength'
-- catégorielle : 'scaledegreespecifier', 'tonic', 'mode', 'metriccontour', 'nextisrest', 'duration_fullname', 'imacontour', 'pitch', 'contour3', 'contour5', 'durationcontour'
-- label/target : 'phrase_end'
-- Fraction : 'duration_frac', 'beatfraction', 'beatinsong', 'beatinphrase', 'beatinphrase_end', 'IOI_frac', 'beat_fraction_str', 'timesignature', 'restduration_frac', 'IOR_frac'
+- **numérique** : 'scaledegree', 'imaweigth', 'pitch40', 'midipitch', 'diatonicpitch', 'diatonicinterval', 'chromaticinterval', 'pitchproximity', 'pitchreversal', 'duration', 'onsettick', 'phrasepos', 'phrase_ix', 'songpos', 'IOI', 'IOR', 'beatstrength', 'beat_str', 'beat', 'timesignature', 'gpr2a_Frankland', 'gpr2b_Frankland', 'gpr3a_Frankland', 'gpr3d_Frankland', 'gpr_Frankland_sum', 'lbdm_spitch', 'lbdm_sioi', 'lbdm_srest', 'lbdm_rpitch', 'lbdm_rioi', 'lbdm_rrest', 'lbdm_boundarystrength'
+- **catégorielle** : 'scaledegreespecifier', 'tonic', 'mode', 'metriccontour', 'nextisrest', 'duration_fullname', 'imacontour', 'pitch', 'contour3', 'contour5', 'durationcontour'
+- **label/target** : 'phrase_end'
+- **Fraction** : 'duration_frac', 'beatfraction', 'beatinsong', 'beatinphrase', 'beatinphrase_end', 'IOI_frac', 'beat_fraction_str', 'timesignature', 'restduration_frac', 'IOR_frac'
 
 *Les données sous forme de fractions sont reformatées en valeur numérique*
 
@@ -151,6 +177,16 @@ Il faut cependant éviter de générer toutes les sous-séquences, car cela gén
 - Forte redondance, les sous-séquences sont très similaires les unes des autres, entraînant des calculs inutiles.
 - Overfitting, en faisant de l'apprentissage supervisé avec nos modèles, risque d'apprendre des informations redondantes trop spécifiques.
 
+Il est impossible de donner les listes brutes à nos modèles. Nous allons donc étendre nos listes, afin d'avoir une colonne par note et par features.
+
+Exemple pour 2 sous-séquences: 
+> | F1           | F2           | -> | F1a | F1b | F1c | F1d | F2a | F2b | F2c | F2d |
+> |--------------|--------------|----|-----|-----|-----|-----|-----|-----|-----|-----|
+> | [1, 2, 3, 4] | [A, B, C, D] | -> |  1  |  2  |  3  |  4  |  A  |  B  |  C  |  D  |
+> | [3, 4, 5, 6] | [C, D, E, F] | -> |  3  |  4  |  5  |  6  |  C  |  D  |  E  |  F  |
+
+Nous allons ensuite diviser notre tableau de données étendu en 2, en un jeu d'entraînement et un jeu de test. Le jeu de test faisant 1/3 de la taille du jeu d'entraînement.
+
 ### 3) Choix des features:
 
 Pour permettre au modèle de prédire correctement les fins de phrases, nous devons lui fournir les données qui lui sont utiles. Cependant, il n'est pas simple de savoir
@@ -161,24 +197,25 @@ Pour commencer, nous avons choisi de manière arbitraire 4 features numériques 
 Nous avons donc sélectionné les features suivantes : "scaledegree", "duration", "midipitch", "beatstrength".
 Afin de rendre les données comptables avec tous les modèles, nous remplaçons les valeurs manquantes par des 0.
 
-Cela nous permet de tester différents modèles sur des jeux de données simples, sans avoir besoin de reformater les données.
-Une fois les séquences découpées en sous-séquences, nous avons pu tester différents modèles avec les paramètres par défaut : 
-- **KNeighborsClassifier**: Classifie un point en fonction des classes majoritaires de ses k-plus proches voisins, idéal pour des frontières complexes, mais sensible aux dimensions élevées.
-- **DecisionTreeClassifier**: Utilise une structure arborescente pour diviser les données selon les caractéristiques les plus informatives, facile à interpréter, mais sujette au surapprentissage.
-- **SGDClassifier**: Implémente une descente de gradient stochastique pour des modèles linéaires, efficace pour les grands volumes de données et des flux de données en continu.
-- **LogisticRegression**: Modèle linéaire qui prédit des probabilités pour des classes, bien adapté aux problèmes binaires et robustes avec régularisation.
-- **SVC**: Utilise des marges maximales pour classifier des données, efficace pour les problèmes non linéaires grâce à des noyaux, mais coûteux en temps et mémoire.
-- **GaussianNB**: Classificateur bayésien qui suppose des distributions normales pour chaque caractéristique, rapide et performant avec des hypothèses simplifiées.
-- **RandomForestClassifier**: Ensemble d'arbres de décision entraînés sur des sous-échantillons aléatoires, robuste au surapprentissage et performant sur des jeux de données variés.
 
-Pour commencer, nous avons tester avec une taille de 4, sur 1/3 du jeu de données.
+Pour commencer, nous avons tester avec une taille de 4 sur nos modeles.
 
-Les résultats des différents modèles nous permettent de constater que:
-Le modèle RandomForestClassifier est le modèle qui prédit le mieux les fins de phrases, avec le modèle SVC.
-> Pour réaliser les diffèrents test suivant nous travaillerons dans un premier temps avec le RandomForestClassifier, il est le plus performant et beaucoup plus rapide que SVC. 
+![matrice de confusion](/model_test/results/arbitraire/confusion_matrix_DecisionTreeClassifier.png)
+*matrice de confussion RandomForestClassifier*
 
-Que les données sont pas équilibrées, il y a beaucoup plus de sous sequences qui ne sont pas des fin de phrases que sequences qui le sont.
-> Sans travailler sur des données equilibrées, les modeles ont tendances a predire des sous sequences fin de phrases comme n'en etant pas.
+Nous pouvons constater que nos données ne sont pas équilibrées. Ce qui est logique car, il y a forcement plus de sous sequences qui ne sont pas des fin de phrase que de sous sequences qui sont des fins de phrases. (il y a 10 fois plus de sous sequences qui ne sont pas des fins de phrases (189000) que de sous sequences qui le sont (19000)). 
+De ce fait, nous ne pouvons pas nous baser sur le f1 score du modele en "weigthed average", ce score est meilleur que le "macro average", car il privilegie la classe majoritaire. 
+
+*Nous utilisons ici le f1 score car il represente une combinaison des mesures de rappel et de precision*
+
+Le fichier `results/arbitraire/résulats` nous donne acces aux details de chaque modele.
+
+![graphe des f1 score des modeles](/model_test/results/arbitraire/models_f1_scores_visualization.png)
+Ce graphe nous permet de constater qu'avec les parametres par defaut, le modeles RandomForestClassifier est les meilleurs, avec un score de 0,79.
+
+Pour ameliorer notre score, nous pouvons essayer d'equilibrer nos données d'entrainement, pour voir si cela nous permet une meilleur classification.
+
+
 
 #### b) Matrice de corrélations :
 L'utilisation de seulement de ces 4 features ne permet pas d'obtenir de bons résultats. Il est donc nécessaire de changer d'approche pour identifier les features ayant un impact significatif sur notre cible.
