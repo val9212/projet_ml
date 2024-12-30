@@ -108,14 +108,16 @@ for x in refactor:
 cat_columns = ['scaledegreespecifier', 'tonic', 'mode', 'metriccontour', 'nextisrest', 'duration_fullname',
                'phrase_end', 'imacontour', 'pitch', 'contour3', 'contour5', 'durationcontour']
 
-data_num = data[[col for col in data.columns if col not in cat_columns]]
+# Matrice 1
+
+data_num = data[[col for col in data.columns if col not in cat_columns]] #On retire les colonnes catégorielles
 data_num['phrase_end'] = data['phrase_end']
 
 label = ['phrase_end']
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ('cat', OneHotEncoder(sparse_output=False), label),# Encodage catégoriel
+        ('cat', OneHotEncoder(sparse_output=False), label),
     ],
     remainder='passthrough'
 )
@@ -125,25 +127,21 @@ final_features = preprocessor.fit_transform(data_num)
 num_data = pd.DataFrame(final_features, columns=preprocessor.get_feature_names_out())
 num_corr = num_data.corr()
 
-# dimensions du graphique en fonction du nombre de colonnes
 num_columns = num_corr.shape[1]
 fig_width = num_columns * 0.5
 fig_height = num_columns * 0.5
 
-# Génération de la heatmap en mode "géant"
 plt.figure(figsize=(fig_width, fig_height))
 sns.heatmap(num_corr, cmap="coolwarm", annot=False)
 
-# Personnalisation du titre
 plt.title("Matrice de corrélation des caractéristiques", fontsize=16)
-
-# Sauvegarde en SVG avec toutes les données visibles
 plt.savefig("num_corr1.svg", format="svg", bbox_inches="tight")
 
-plt.show()
+
+# Matrice 2
 
 no_frac = ['duration_frac', 'beatfraction', 'IOI_frac',
-            'beat_fraction_str', 'timesignature', 'restduration_frac', 'IOR_frac']
+            'beat_fraction_str', 'IOR_frac']
 data_num2 = data_num[[col for col in data_num.columns if col not in no_frac]]
 
 label = ['phrase_end']
@@ -160,23 +158,17 @@ final_features = preprocessor.fit_transform(data_num2)
 num_data = pd.DataFrame(final_features, columns=preprocessor.get_feature_names_out())
 num_corr = num_data.corr()
 
-num_columns = num_corr.shape[1]  # Nombre de colonnes dans la matrice
-fig_width = num_columns * 0.5  # Ajustez cette valeur si nécessaire
-fig_height = num_columns * 0.5  # Ajustez pour garder une taille proportionnelle
+num_columns = num_corr.shape[1]
+fig_width = num_columns * 0.5
+fig_height = num_columns * 0.5
 
-# Génération de la heatmap en mode "géant"
 plt.figure(figsize=(fig_width, fig_height))
 sns.heatmap(num_corr, cmap="coolwarm", annot=False)
 
-# Personnalisation du titre
 plt.title("Matrice de corrélation des caractéristiques", fontsize=16)
-
-# Sauvegarde en SVG avec toutes les données visibles
 plt.savefig("num_corr2.svg", format="svg", bbox_inches="tight")
 
-# Affichage du graphique
-plt.show()
-
+# Matrice 3
 
 remove = ["diatonicinterval", "midipitch", "beat_str"]
 data_num3 = data_num2[[col for col in data_num2.columns if col not in remove]]
@@ -185,7 +177,7 @@ label = ['phrase_end']
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ('cat', OneHotEncoder(sparse_output=False), label),# Encodage catégoriel
+        ('cat', OneHotEncoder(sparse_output=False), label),
     ],
     remainder='passthrough'
 )
@@ -195,54 +187,13 @@ final_features = preprocessor.fit_transform(data_num3)
 num_data = pd.DataFrame(final_features, columns=preprocessor.get_feature_names_out())
 num_corr = num_data.corr()
 
-num_columns = num_corr.shape[1]  # Nombre de colonnes dans la matrice
-fig_width = num_columns * 0.5  # Ajustez cette valeur si nécessaire
-fig_height = num_columns * 0.5  # Ajustez pour garder une taille proportionnelle
-
-# Génération de la heatmap en mode "géant"
-plt.figure(figsize=(fig_width, fig_height))
+plt.figure(figsize=(10,6))
 sns.heatmap(num_corr, cmap="coolwarm", annot=False)
 
-# Personnalisation du titre
 plt.title("Matrice de corrélation des caractéristiques", fontsize=16)
-
-# Sauvegarde en SVG avec toutes les données visibles
 plt.savefig("num_corr3.svg", format="svg", bbox_inches="tight")
 
-# Affichage du graphique
-plt.show()
-
-
-remove = ["beat", "diatonicpitch", "IOI", "lbdm_sioi"]
-data_num4 = data_num3[[col for col in data_num3.columns if col not in remove]]
-
-label = ['phrase_end']
-
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('cat', OneHotEncoder(sparse_output=False), label),# Encodage catégoriel
-    ],
-    remainder='passthrough'
-)
-
-final_features = preprocessor.fit_transform(data_num4)
-
-num_data = pd.DataFrame(final_features, columns=preprocessor.get_feature_names_out())
-num_corr = num_data.corr()
-
-num_columns = num_corr.shape[1]  # Nombre de colonnes dans la matrice
-fig_width = num_columns * 0.5  # Ajustez cette valeur si nécessaire
-fig_height = num_columns * 0.5  # Ajustez pour garder une taille proportionnelle
-
-# Génération de la heatmap en mode "géant"
-plt.figure(figsize=(fig_width, fig_height))
-sns.heatmap(num_corr, cmap="coolwarm", annot=False)
-
-# Personnalisation du titre
-plt.title("Matrice de corrélation des caractéristiques", fontsize=16)
-
-# Sauvegarde en SVG avec toutes les données visibles
-plt.savefig("num_corr4.svg", format="svg", bbox_inches="tight")
+# Matrice 4
 
 remove = ["beat", "diatonicpitch", "IOR", "lbdm_sioi"]
 data_num4 = data_num3[[col for col in data_num3.columns if col not in remove]]
@@ -251,7 +202,7 @@ label = ['phrase_end']
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ('cat', OneHotEncoder(sparse_output=False), label),# Encodage catégoriel
+        ('cat', OneHotEncoder(sparse_output=False), label),
     ],
     remainder='passthrough'
 )
@@ -261,19 +212,13 @@ final_features = preprocessor.fit_transform(data_num4)
 num_data = pd.DataFrame(final_features, columns=preprocessor.get_feature_names_out())
 num_corr = num_data.corr()
 
-num_columns = num_corr.shape[1]  # Nombre de colonnes dans la matrice
-fig_width = num_columns * 0.5  # Ajustez cette valeur si nécessaire
-fig_height = num_columns * 0.5  # Ajustez pour garder une taille proportionnelle
-
-# Génération de la heatmap en mode "géant"
-plt.figure(figsize=(fig_width, fig_height))
+plt.figure(figsize=(10,6))
 sns.heatmap(num_corr, cmap="coolwarm", annot=False)
 
-# Personnalisation du titre
 plt.title("Matrice de corrélation des caractéristiques", fontsize=16)
-
-# Sauvegarde en SVG avec toutes les données visibles
 plt.savefig("num_corr4.svg", format="svg", bbox_inches="tight")
+
+# Matrice 5
 
 remove = ["lbdm_rrest", "lbdm_rioi", "lbdm_rpitch", "lbdm_spitch", "gpr2a_Frankland", "gpr3a_Frankland", "gpr3d_Frankland"]
 data_num5 = data_num4[[col for col in data_num4.columns if col not in remove]]
@@ -282,7 +227,7 @@ label = ['phrase_end']
 
 preprocessor = ColumnTransformer(
     transformers=[
-        ('cat', OneHotEncoder(sparse_output=False), label),# Encodage catégoriel
+        ('cat', OneHotEncoder(sparse_output=False), label),
     ],
     remainder='passthrough'
 )
@@ -292,16 +237,33 @@ final_features = preprocessor.fit_transform(data_num5)
 num_data = pd.DataFrame(final_features, columns=preprocessor.get_feature_names_out())
 num_corr = num_data.corr()
 
-num_columns = num_corr.shape[1]  # Nombre de colonnes dans la matrice
-fig_width = num_columns * 0.5  # Ajustez cette valeur si nécessaire
-fig_height = num_columns * 0.5  # Ajustez pour garder une taille proportionnelle
-
-# Génération de la heatmap en mode "géant"
-plt.figure(figsize=(fig_width, fig_height))
+plt.figure(figsize=(10,6))
 sns.heatmap(num_corr, cmap="coolwarm", annot=False)
 
-# Personnalisation du titre
 plt.title("Matrice de corrélation des caractéristiques", fontsize=16)
-
-# Sauvegarde en SVG avec toutes les données visibles
 plt.savefig("num_corr5.svg", format="svg", bbox_inches="tight")
+
+#Matrice final
+
+notin = ["phrase_end", "duration", "beatinphrase", 'restduration_frac', "beatinphrase_end", "IOI", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", 'imaweight']
+data_numf = data_num5[[col for col in data_num5.columns if col in notin]]
+
+label = ['phrase_end']
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', OneHotEncoder(sparse_output=False), label),
+    ],
+    remainder='passthrough'
+)
+
+final_features = preprocessor.fit_transform(data_numf)
+
+num_data = pd.DataFrame(final_features, columns=preprocessor.get_feature_names_out())
+num_corr = num_data.corr()
+
+plt.figure(figsize=(10,6))
+sns.heatmap(num_corr, cmap="coolwarm", annot=False)
+
+plt.title("Matrice de corrélation des caractéristiques", fontsize=16)
+plt.savefig("corr_final.svg", format="svg", bbox_inches="tight")

@@ -1,10 +1,7 @@
 from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix,ConfusionMatrixDisplay
-import numpy as np
-import logging
 from sklearn.metrics import RocCurveDisplay
-from sklearn.utils import resample
 
 
 class ModelTrainer:
@@ -78,6 +75,6 @@ class ModelTrainer:
         print(cm)
         self.confusion_matrices.append((cm, name))
         ConfusionMatrixDisplay(cm).plot()
-        plt.savefig(f"results/confusion_matrix_2{name}.png")
+        plt.savefig(f"results/confusion_matrix_{name}.png")
         RocCurveDisplay.from_estimator(model, self.X_test, self.y_test)
-        plt.savefig(f"results/roc_curve_2{name}.png")
+        plt.savefig(f"results/roc_curve_{name}.png")

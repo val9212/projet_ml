@@ -37,12 +37,11 @@ def main():
     # Add models to train
     models = [
         (KNeighborsClassifier(), "KNeighborsClassifier"),
-        (DecisionTreeClassifier(max_depth=20), "DecisionTreeClassifier"),
-        (SGDClassifier(max_iter=1000, tol=1e-3), "SGDClassifier"),
-        (LogisticRegression(max_iter=1000), "LogisticRegression"),
-        (SVC(), "SVC"),
+        (DecisionTreeClassifier(), "DecisionTreeClassifier"),
+        (SGDClassifier(), "SGDClassifier"),
+        (LogisticRegression(), "LogisticRegression"),
         (GaussianNB(), "GaussianNB"),
-        (RandomForestClassifier(n_estimators=100, random_state=42, class_weight="balanced"),"RandomForestClassifier",),
+        (RandomForestClassifier(),"RandomForestClassifier",),
     ]
 
     for model, name in models:
@@ -55,18 +54,27 @@ def main():
     model_names = []
     f1_scores = []
     for name, result in model_trainer.results.items():
-        f1_score = result["classification_report"]["weighted avg"]["f1-score"]
+        f1_score = result["classification_report"]["macro avg"]["f1-score"]
         model_names.append(name)
         f1_scores.append(f1_score)
 
-    # Plot the F1-scores of the models
     plt.figure(figsize=(10, 6))
-    plt.bar(model_names, f1_scores, color="skyblue")
-    plt.xlabel("Model")
-    plt.ylabel("Weighted F1-Score")
-    plt.title("Model Comparison")
-    plt.xticks(rotation=45)
-    plt.tight_layout()
+    plt.barh(model_names, f1_scores)
+
+    # Ajout des labels et du titre
+    plt.xlabel('F1-Score (macro avg)')
+    plt.ylabel('Modèles')
+    plt.title('F1-Score (macro avg) pour chaque modèle')
+    plt.yticks(fontsize=7)
+
+    # Annotation des scores sur chaque barre
+    for index, score in enumerate(f1_scores):
+        plt.text(score + 0.01, index, f'{score:.2f}', va='center')
+
+    # Affichage du graphique
+    plt.grid(axis='x', linestyle='--', alpha=0.7)
+    plt.savefig(
+        'C:/Users/val92/PycharmProjects/projet_ml/model_test/models_f1_scores_visualization.png', format='png')
     plt.show()
 
 

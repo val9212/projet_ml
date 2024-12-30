@@ -1,7 +1,7 @@
 # models.py
 from matplotlib import pyplot as plt
 from sklearn.model_selection import GroupShuffleSplit, train_test_split
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
 import numpy as np
 import logging
 from sklearn.metrics import RocCurveDisplay
@@ -116,5 +116,7 @@ class ModelTrainer:
         print(classification_report(self.y_test, y_pred))
         print("Confusion Matrix:")
         print(cm)
+        ConfusionMatrixDisplay(cm).plot()
+        plt.savefig(f"confusion_matrix_2{name}.png")
         RocCurveDisplay.from_estimator(model, self.X_test, self.y_test)
         plt.show()

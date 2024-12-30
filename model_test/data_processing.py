@@ -2,7 +2,7 @@ from MTCFeatures import MTCFeatureLoader
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.preprocessing import LabelEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from fractions import Fraction
@@ -23,7 +23,7 @@ class DataProcessor:
         self.numerical_columns = numerical_columns
 
         # Prise en compte pour des données specifiques
-        self.refactor = [0,1,2,3,4,5,6,7]
+        self.refactor = [4,5,6,7,8,9,10,11,12,13,14,15]
         self.cat_columns = []
         self.num_columns = []
 

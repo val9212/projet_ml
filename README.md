@@ -96,78 +96,68 @@ Les séquences caractéristiques correspondent aux séquences de notes dans une 
 
 Pour réaliser se projet, nous allons nous limiter au test d'un nombre limité de modeles. Nous allons travailler sur des modèles vue en cours, et le modèle RandomForestClassifier.
 
-- **KNeighborsClassifier**: Classifie un point en fonction des classes majoritaires de ses k-plus proches voisins, idéal pour des frontières complexes, mais sensible aux dimensions élevées.
-- **DecisionTreeClassifier**: Utilise une structure arborescente pour diviser les données selon les caractéristiques les plus informatives, facile à interpréter, mais sujette au surapprentissage.
-- **SGDClassifier**: Implémente une descente de gradient stochastique pour des modèles linéaires, efficace pour les grands volumes de données et des flux de données en continu.
-- **LogisticRegression**: Modèle linéaire qui prédit des probabilités pour des classes, bien adapté aux problèmes binaires et robustes avec régularisation.
+- **KNeighborsClassifier**: Classification par proximité avec les k-plus-proches voisins
+- **DecisionTreeClassifier**: Arbres de décision pour diviser les données en classes.
+- **SGDClassifier**: Optimisation incrémentale pour les grands ensembles de données.
+- **LogisticRegression**: Classificateur linéaire basé sur la régression logistique.
 - **SVC**: Utilise des marges maximales pour classifier des données, efficace pour les problèmes non linéaires grâce à des noyaux, mais coûteux en temps et mémoire.
-- **GaussianNB**: Classificateur bayésien qui suppose des distributions normales pour chaque caractéristique, rapide et performant avec des hypothèses simplifiées.
-- **RandomForestClassifier**: Ensemble d'arbres de décision entraînés sur des sous-échantillons aléatoires, robuste au surapprentissage et performant sur des jeux de données variés.
+- **GaussianNB**: Naïve Bayes avec distribution gaussienne.
+- **RandomForestClassifier**: Forêt d’arbres de décision pour réduire le surapprentissage.
 
-Avant de valider nous allons realiser une verification du temps d'execution de l'entrainement et du test de ces modeles.
+Avant de valider, nous allons réaliser une vérification du temps d'exécution de l'entraînement et du test de ces derniers.
 
-![graphe representant le temps d'entrainement des modeles](/Visualisation/entrainement.png)
+![graphe représentant le temps d'entrainement des modèles](/Visualisation/entrainement.png)
 
-Ce graphe nous permet de constater que les modeles prennent tous en moyenne le meme temps pour s'entrainer sur les données. Les modeles KNeighborsClassifier et GaussianNB sont les plus rapide.
+Ce graphique nous permet de constater que les modèles prennent tous en moyenne le même temps pour s'entraîner sur les données. Les modèles KNeighborsClassifier et GaussianNB sont les plus rapides.
 
+![graphe représentant le temps de test des modèles](/Visualisation/test.png)
 
-![graphe representant le temps de test des modeles](/Visualisation/test.png)
-
-Ce graphe nous permet de constater que le modèle SVC prend beaucoup plus de temps à exécuter le test. Nous pouvons l'expliquer, car il a une complexité de O(n²).
+Ce graphique nous permet de constater que le modèle SVC prend beaucoup plus de temps à exécuter le test. Nous pouvons l'expliquer, car il a une complexité de O(n²).
 Afin d'éviter des temps d'exécution trop longs, nous n'allons donc pas le garder pour la suite de nos tests.
 
 ## METHODOLOGIE : 
 
 ### 1) Exploration des données (exploration.ipynb): 
 
-Une fois les données téléchargées, et les features de chaque séquence extraite, nous pouvons constater que chaque
-Séquence est représentée sous forme de liste Python. Chaque élément d'une liste correspond à une note. Notre jeu de données 
-est composé de 60 features, une target et un identifiant. Notre target est la colonne phrase_end qui donne pour chaque note une 
-Valeur booléenne True / False (True si la note est une fin de phrase et false si la note ne l'est pas).
+Après avoir téléchargé les données et extrait les différentes features de chaque séquence, nous avons constaté que chaque séquence est représentée
+sous forme de liste Python. Chaque élément de cette liste correspond à une note. L'ensemble de notre jeu de données comprend 60 features, une target appelée `phrase_end` et 
+un identifiant unique pour chaque séquence. La target `phrase_end` est une colonne booléenne : elle indique si une note correspond à une fin de phrase (True) ou non (False).
 
-Nous pouvons aussi constater que les dernières features (lyrics, noncontentword, wordend, phoneme, rhymes, rhymescontentwords,
-wordstress, melismastate), correspondent aux lyrics et paroles des chansons, plus de la moitié de leurs données sont manquantes.
-Nous allons donc les retirer. Il nous reste 52 Feature.
+En examinant les données, nous avons aussi constaté que certaines features étaient associées aux lyrics des séquences musicales. Ces features sont: `lyrics`, `noncontentword`, `wordend`, 
+`phoneme`, `rhymes`, `rhymescontentwords`, `wordstress` et `melismastate`. Ces features ont plus de 50 % de leur valeur qui sont manquantes, ce qui ne nous permet de les utiliser. 
+Nous avons donc choisi de les retirer. Il nous reste donc 52 features.
 
-Nous pouvons aussi constater que certaines autres features contiennent pour certaines notes des valeurs None, comme par exemple pour diatonicinterval
-Où chaque première est un `None` car cette valeur dépend de la note d'avant. (Nous gardons ces features dans la suite de nos analyses)
+Certaines autres features présentent des valeurs `None` pour certaines notes. Par exemple, la colonne `diatonicinterval` contient tout le temps une valeur 
+`None` pour la première note de chaque séquence, car cette valeur dépend de la note précédente. Ces données restent utilisables, nous les avons donc gardées pour nos analyses.
 
-Nous pouvons constater que la taille des phrases dans les séquences du jeu de données est très variable, l'analyse de la taille (nombre de notes avant une note fin de phrases) nous permet de voir que les phrases font : 
-- En moyenne, 11 notes.
-- En moyenne 9 notes. 
-- Au maximum 238 notes.
-- Au minimum 1 note.
+Nous avons étudié la taille des phrases, que nous définissons comme une suite de notes jusqu’à une fin de phrase. Les phrases contiennent en 
+moyenne 11 notes, avec une médiane à 9 notes, un minimum de 1 note et un maximum de 238 notes. 
 
-Nous avons aussi analysé la taille des séquences, avec une représentation graphique.
+Nous avons réalisé un graphique pour voir la variabilité des tailles de séquences.
 
 ![graphe representant la taille des sequences](/Visualisation/graphe_tailles_seqs.png)
 
-En rentrant plus dans le détail, nous pouvons voir que les séquences font:
-- En moyenne 72 notes.
-- Au maximum 1231 notes.
-- Au minimum 3 notes.
-
-Classification des features catégorielles et numériques qu'il nous reste:
+Nous avons pour finir classifié les features qu'ils nous restaient en 3 catégories :
 
 - **numérique** : 'scaledegree', 'imaweigth', 'pitch40', 'midipitch', 'diatonicpitch', 'diatonicinterval', 'chromaticinterval', 'pitchproximity', 'pitchreversal', 'duration', 'onsettick', 'phrasepos', 'phrase_ix', 'songpos', 'IOI', 'IOR', 'beatstrength', 'beat_str', 'beat', 'timesignature', 'gpr2a_Frankland', 'gpr2b_Frankland', 'gpr3a_Frankland', 'gpr3d_Frankland', 'gpr_Frankland_sum', 'lbdm_spitch', 'lbdm_sioi', 'lbdm_srest', 'lbdm_rpitch', 'lbdm_rioi', 'lbdm_rrest', 'lbdm_boundarystrength'
 - **catégorielle** : 'scaledegreespecifier', 'tonic', 'mode', 'metriccontour', 'nextisrest', 'duration_fullname', 'imacontour', 'pitch', 'contour3', 'contour5', 'durationcontour'
 - **label/target** : 'phrase_end'
 - **Fraction** : 'duration_frac', 'beatfraction', 'beatinsong', 'beatinphrase', 'beatinphrase_end', 'IOI_frac', 'beat_fraction_str', 'timesignature', 'restduration_frac', 'IOR_frac'
 
-*Les données sous forme de fractions sont reformatées en valeur numérique*
+Les colonnes sous forme de fractions ont été reformattées en valeurs numériques et les colones catégorielles ont été encodées avec la méthode OneHotEncoder.
 
 ### 2) créations de sous séquences et préparation des données : 
 
-Le jeu de données contient 18108 séquences, afin de trouver les fins de phrases dedans, nous allons les diviser en sous-séquences.
+Le jeu de données contient 18108 séquences, afin de trouver les fins de phrases dedans, nous allons les diviser en sous-séquences plus petites.
 
-Le script de création de sous-séquences parcours toutes les listes du jeu de données, et les divise en listes plus petites de tailles choisies.
-Les séquences ayant toutes des tailles, nous faisons attention à ce que les dernières sous-séquences ne soient pas tronquées.
+Le script de création de sous-séquences parcours toutes les listes du jeu de données, et les divise en listes plus petites de tailles que nous pouvons choisir.
+Les séquences ayant toutes des tailles différentes, nous faisons attention à ce que les dernières sous-séquences ne soient pas tronquées.
 
 Exemple pour des sous-séquences de taille 4: 
 > [1,2,3,4,5,6,7,8,9,10] -> [1,2,3,4] [5,6,7,8] [7,8,9,10]
 
-Cette méthode nous permet bien de récupérer des listes formant des sous-séquences en étant toutes de la même taille. Mais, en réalisant
-Ce découpage, on perd beaucoup de sous-séquences. Nous allons réaliser un décalage d'une valeur qu'on peut définir. 
+Cette méthode nous permet bien de récupérer des listes formant des sous-séquences qui sont toutes de la même taille. En réalisant ce découpage, on perd beaucoup de sous-séquences. 
+Nous allons réaliser un décalage d'une valeur qu'on peut aussi définir. 
 
 Exemple pour des sous-séquences de taille 4 avec un décalage de 2 (4/2): 
 > [1,2,3,4,5,6,7,8,9,10] -> [1,2,3,4] [3,4,5,6] [5,6,7,8] [7,8,9,10]
@@ -185,42 +175,109 @@ Exemple pour 2 sous-séquences:
 > | [1, 2, 3, 4] | [A, B, C, D] | -> |  1  |  2  |  3  |  4  |  A  |  B  |  C  |  D  |
 > | [3, 4, 5, 6] | [C, D, E, F] | -> |  3  |  4  |  5  |  6  |  C  |  D  |  E  |  F  |
 
-Nous allons ensuite diviser notre tableau de données étendu en 2, en un jeu d'entraînement et un jeu de test. Le jeu de test faisant 1/3 de la taille du jeu d'entraînement.
+Enfin, le tableau étendu est divisé en deux parties : un jeu d’entraînement et un jeu de test. Le jeu de test représente un tiers de la taille du jeu de données.
+
+Certains modèles n'étant pas capables d'interpréter les valeurs manquantes, nous remplaçons ces dernières par des 0.
 
 ### 3) Choix des features:
 
 Pour permettre au modèle de prédire correctement les fins de phrases, nous devons lui fournir les données qui lui sont utiles. Cependant, il n'est pas simple de savoir
-quelles sont les features utiles pour prédire une fin de phrase en se basant uniquement sur la description de ses dernières. Afin de répondre à cette problématique, nous avons testé 3 hypotheses.
+quelles sont les features utiles pour prédire une fin de phrase en se basant uniquement sur leur description. Afin de répondre à cette problématique, nous avons testé deux approches.
 
 #### a) Choix arbitraire :
 Pour commencer, nous avons choisi de manière arbitraire 4 features numériques pour tester l'implémentation de notre script de division des séquences en sous-séquences.
-Nous avons donc sélectionné les features suivantes : "scaledegree", "duration", "midipitch", "beatstrength".
-Afin de rendre les données comptables avec tous les modèles, nous remplaçons les valeurs manquantes par des 0.
+Nous avons donc sélectionné les features suivantes : 
+- "scaledegree", 
+- "duration", 
+- "midipitch", 
+- "beatstrength".
+
+Nous avons choisi comme taille pour nos sous-séquences de quatre avec un décalage de deux. Tous les modèles sont testés avec leurs paramètres par défaut.
+
+![Matrice de confusion pour le RandomForestClassifier](/model_test/results/arbitraire/confusion_matrix_DecisionTreeClassifier.png)
+
+*Matrice de confusion pour le RandomForestClassifier.*
+
+Nous pouvons constater que nos données ne sont pas équilibrées. Ce qui était attendu car, il y a forcément plus de sous-séquences qui 
+ne sont pas des fins de phrase que de sous-séquences qui sont des fins de phrases. (Il y a 10 fois plus de sous-séquences qui ne sont pas des fins de phrases (189000) que de sous-séquences qui le sont (19000)). 
+
+À cause de ce déséquilibre, nous ne pouvons pas nous baser sur le f1 score du modèle en "weigthed average", meme si ce score est meilleur que le "macro average". Il ne serait pas pertinent de l'utiliser car, il privilégie la classe majoritaire. 
+
+Nous utilisons donc le f1 score macro average, qui est mieux adapté pour comparer les performances globales
+Le f1 score combine les mesures de rappel et de précision, offrant une évaluation des performances du modèle.
+
+Le fichier `results/arbitraire/rsultats.txt` présente les résultats détaillés des rapports de classification.
 
 
-Pour commencer, nous avons tester avec une taille de 4 sur nos modeles.
+![graphe montrant les f1 score "macro average" des modèles](/model_test/results/arbitraire/models_f1_scores_visualization.png)
+Ce graphe nous permet de constater qu'avec les paramètres par défaut, le modèle RandomForestClassifier est le meilleur, avec un f1 score de 0,79. Le modèle avec le moins bon f1 score (0,65) est le SGDClassifier 
 
-![matrice de confusion](/model_test/results/arbitraire/confusion_matrix_DecisionTreeClassifier.png)
-*matrice de confussion RandomForestClassifier*
+Pour améliorer ces scores, nous pouvons essayer d'équilibrer nos données d'entraînement, pour voir si cela permet de réduire l'impact du déséquilibre.
 
-Nous pouvons constater que nos données ne sont pas équilibrées. Ce qui est logique car, il y a forcement plus de sous sequences qui ne sont pas des fin de phrase que de sous sequences qui sont des fins de phrases. (il y a 10 fois plus de sous sequences qui ne sont pas des fins de phrases (189000) que de sous sequences qui le sont (19000)). 
-De ce fait, nous ne pouvons pas nous baser sur le f1 score du modele en "weigthed average", ce score est meilleur que le "macro average", car il privilegie la classe majoritaire. 
+![graphe montrant les f1 score "macro average" des modèles avec les données d'entrainement équilibrées](/model_test/results/arbitraire/models_f1_scores_balanced.png)
 
-*Nous utilisons ici le f1 score car il represente une combinaison des mesures de rappel et de precision*
+L'équilibrage des données d'entraînement n'a pas permis d'améliorer les résultats, pour la majorité des modèles, il réduit même les scores. On peut l'expliquer par l'augmentation du déséquilibre.
+Les modèles ont tendance à classer la majorité des sous-séquences comme n'étant pas des fins de phrases.
 
-Le fichier `results/arbitraire/résulats` nous donne acces aux details de chaque modele.
+![Matrice de confusion pour le RandomForestClassifier avec les données d'entrainement équilibrées](/model_test/results/arbitraire/equilibre/confusion_matrix_2RandomForestClassifier.png)
 
-![graphe des f1 score des modeles](/model_test/results/arbitraire/models_f1_scores_visualization.png)
-Ce graphe nous permet de constater qu'avec les parametres par defaut, le modeles RandomForestClassifier est les meilleurs, avec un score de 0,79.
+*Matrice de confusion pour le RandomForestClassifier avec les données d'entrainement équilibrées*
 
-Pour ameliorer notre score, nous pouvons essayer d'equilibrer nos données d'entrainement, pour voir si cela nous permet une meilleur classification.
-
+Pour améliorer nos résultats, nous avons exploré une autre méthode plus précise pour la sélection des features : l'analyse de corrélation.
 
 
-#### b) Matrice de corrélations :
-L'utilisation de seulement de ces 4 features ne permet pas d'obtenir de bons résultats. Il est donc nécessaire de changer d'approche pour identifier les features ayant un impact significatif sur notre cible.
-L'utilisation d'une matrice de corrélation répond à cette problématique. Les matrices de corrélation permettent de mettre en évidence l'impact des attributs sur la cible. Elles permettent également d'identifier les features fortement corrélées entre elles, qui peuvent être supprimées afin d'éviter de biaiser l'apprentissage du modèle.
+#### b) Matrice de corrélations (correlation/global et correlation/numérique):
+L'utilisation de quatre features choisit arbitrairement a montré des limites. Nous avons décidé d'utiliser des matrices de corrélation pour identifier les features les plus significatives.
+Ces matrices permettent d’évaluer les relations linéaires entre les features et la cible, en calculant le coefficient de corrélation de Pearson. 
+Elles permettent également d’identifier les features fortement corrélées entre elles, ce qui nous permet d'éviter les informations redondantes. Ainsi, cette approche a permis de sélectionner les variables pertinentes, simplifiant le modèle et améliorant ses performances.
+
+Pour réaliser nos matrices de correlations, nous commençons par exploser nos listes, afin d'avoir une ligne par note.
+Puis, nous devons reformater les features catégorielles, et les features en fraction en valeurs numériques.
+
+Cela nous permet de générer une matrice de corrélation globale: `correlation/matrice_correlation_global.svg`. 
+> Cette matrice est trop volumineuse pour être interpretée et affichée.
+
+Nous allons donc, dans un premier temps, nous concentrer sur les features qui sont numériques ou formatées en fractions.
+
+À partir de la première matrice `correlation/num_corr1.svg`, nous pouvons constater que les features qui possèdent une version et une version en fraction sont fortement corrélées.
+
+Nous avons decider de supprimer les versions sous forme de fraction : 'duration_frac', 'beatfraction', 'IOI_frac', 'beat_fraction_str', 'IOR_frac'.
+
+Nous avons aussi identifié d'autres features avec des corrélations élevées, nous les avons enlevées : "diatonicinterval", "midipitch", "beat_str", car elles sont très fortement corréelles avec d'autres features.
+
+Nous avons continué cette même démarche d'analyse de matrice de corrélations jusqu'à obtenir une matrice de correlation simplifiée.
+
+![matrice de corrélation final](/correlation/corr_final.svg)
+
+Nous sélectionnons les attributs présents dans cette matrice : "duration", "beatinphrase", "restduration_frac", "beatinphrase_end", "IOI", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", "imaweight"
+
+Dans un premier temps, nous le testons uniquement sur le RandomsForestClassifier, afin de verifier qu'il y ait bien une amélioration des résultats par rapport a la sélection arbitraire.
+
+En constatant une amélioration (augmentation d'environ 20% sur le f1 score), nous décidons de le tester sur les autres modèles.
+
+![graphe des f1 score des modeles](/model_test/results/correlation/models_f1_scores_visualization.png)
+
+Malgré le changement de features, le score pour GaussianNB reste faible comparé aux autres modèles. En regardant sa matrice de confusion, on constate que le modèle a tendance à mal classer les fins de phrases, en les catégorisant comme n'étant pas des fins de phrases. 
+
+Pour finir, nous avons testé sur le modèle RandomForestClassifier, l'ajout des features catégorielles. Nous avons constater que le f1-score diminuait, et que le modele avait tendance à mal classer les fins de phrases. De ce fait, nous n'allons pas ajouter de features catégorielles dans nos features sélectionnées.
+Cette baisse de ce score après l'ajout de ces features peut s'expliquer par l'augmentation de la complexité des données due au OneHotEncoder qui crée une colonne par valeur unique présente dans la feature.
 
 
-#### c) RandomForest : 
+### 4) choix de la taille des sous sequences
+
+### 5) choix des hyperparametres des modeles
+
+####
+
+####
+
+####
+
+####
+
+####
+
+####
+
+### 6) Résultats finaux et Discussion
 

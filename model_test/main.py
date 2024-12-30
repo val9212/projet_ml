@@ -15,7 +15,7 @@ def main():
     window_size = 4
     step = 2
     numerical_columns = [ 'scaledegree', 'imaweigth', 'pitch40', 'midipitch', 'diatonicpitch', 'diatonicinterval', 'chromaticinterval', 'pitchproximity', 'pitchreversal', 'duration', 'onsettick', 'phrasepos', 'phrase_ix', 'songpos', 'IOI', 'IOR', 'beatstrength', 'beat_str', 'beat', 'timesignature', 'gpr2a_Frankland', 'gpr2b_Frankland', 'gpr3a_Frankland', 'gpr3d_Frankland', 'gpr_Frankland_sum', 'lbdm_spitch', 'lbdm_sioi', 'lbdm_srest', 'lbdm_rpitch', 'lbdm_rioi', 'lbdm_rrest', 'lbdm_boundarystrength']
-    selected_columns = ["scaledegree", "duration", "midipitch", "beatstrength"]
+    selected_columns = ["duration", "beatinphrase", 'restduration_frac', "beatinphrase_end", "IOI", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", 'imaweight']
     data_processor = DataProcessor(dataset_path, numerical_columns, selected_columns, window_size, step)
     data_processor.clean_data()
     data_processor.create_subsequences()
@@ -60,6 +60,7 @@ def main():
     plt.xlabel('F1-Score (macro avg)')
     plt.ylabel('Modèles')
     plt.title('F1-Score (macro avg) pour chaque modèle')
+    plt.yticks(fontsize=7)
 
     # Annotation des scores sur chaque barre
     for index, score in enumerate(f1_scores):
@@ -67,6 +68,8 @@ def main():
 
     # Affichage du graphique
     plt.grid(axis='x', linestyle='--', alpha=0.7)
+    plt.savefig(
+        'C:/Users/val92/PycharmProjects/projet_ml/model_test/models_f1_scores_visualization.png', format='png')
     plt.show()
 
 
