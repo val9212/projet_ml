@@ -137,7 +137,7 @@ Nous avons réalisé un graphique pour voir la variabilité des tailles de séqu
 
 ![graphe representant la taille des sequences](/Visualisation/graphe_tailles_seqs.png)
 
-Nous avons pour finir classifié les features qu'ils nous restaient en 3 catégories :
+Nous avons pour finir classifié les features qu'ils nous restaient en 4 catégories :
 
 - **numérique** : 'scaledegree', 'imaweigth', 'pitch40', 'midipitch', 'diatonicpitch', 'diatonicinterval', 'chromaticinterval', 'pitchproximity', 'pitchreversal', 'duration', 'onsettick', 'phrasepos', 'phrase_ix', 'songpos', 'IOI', 'IOR', 'beatstrength', 'beat_str', 'beat', 'timesignature', 'gpr2a_Frankland', 'gpr2b_Frankland', 'gpr3a_Frankland', 'gpr3d_Frankland', 'gpr_Frankland_sum', 'lbdm_spitch', 'lbdm_sioi', 'lbdm_srest', 'lbdm_rpitch', 'lbdm_rioi', 'lbdm_rrest', 'lbdm_boundarystrength'
 - **catégorielle** : 'scaledegreespecifier', 'tonic', 'mode', 'metriccontour', 'nextisrest', 'duration_fullname', 'imacontour', 'pitch', 'contour3', 'contour5', 'durationcontour'
@@ -179,7 +179,28 @@ Enfin, le tableau étendu est divisé en deux parties : un jeu d’entraînement
 
 Certains modèles n'étant pas capables d'interpréter les valeurs manquantes, nous remplaçons ces dernières par des 0.
 
-### 3) Choix des features:
+### 4) Fonctionnement du programme
+
+Pour entraîner les modèles de manière automatique, nous avons développé un programme Python. 
+
+Ce programme Python est capable de préparer les données de notre jeu de données, et de tester différents modèles prédéfinis.
+Pour fonctionner, nous devons définir: 
+- size : la taille des sous-séquences
+- step : le décalage entre chaque sous-séquence
+- selected_columns : les colonnes sélectionnées
+- models : la liste de modèles à tester 
+
+Le programme affiche les rapports de classifications, les matrices de confusions et il crée et enregistre pour chaque modèle la matrice de confusions et la courbe ROC.
+Pour finir, il crée une figure de comparaison des f1 scores (macro average) pour analyser les différences de performances globales des modèles.
+
+Ce programme est composé de 3 fichiers pour fonctionner :
+- un fichier main : qui permet d'exécuter le programme.
+- un fichier data_processing : qui contient la classe DataProcessor, qui contient toutes les méthodes qui permettent de préparer les données
+
+
+
+
+### 5) Choix des features:
 
 Pour permettre au modèle de prédire correctement les fins de phrases, nous devons lui fournir les données qui lui sont utiles. Cependant, il n'est pas simple de savoir
 quelles sont les features utiles pour prédire une fin de phrase en se basant uniquement sur leur description. Afin de répondre à cette problématique, nous avons testé deux approches.
@@ -198,8 +219,15 @@ Nous avons choisi comme taille pour nos sous-séquences de quatre avec un décal
 
 *Matrice de confusion pour le RandomForestClassifier.*
 
+Vrais positifs : 10575 occurrences qui correspondent aux sous-séquences prédites comme des fins de phrases par le modèle et en étant des fins de phrase.
+Vrais négatifs : 180971 occurrences qui correspondent aux sous-séquences prédites comme n'étant pas des fins de phrases par le modèle et qui ne sont pas des fins de phrases. 
+Faux positifs : 8916 occurrences qui correspondent aux sous-séquences prédites comme des fins de phrases par le modèle et mais qui ne le sont pas.
+Faux Négatifs : 8093 occurrences qui correspondent aux sous-séquences prédites comme n'étant pas des fins de phrases mais qui le sont vraiment.
+
+On constate donc que le modèle est bien capable de prédire les séquences de la classe majoritaire (vrais négatif). Le modèle a cependant des difficultés à identifier les fins de phrases (Vrais positifs).
+
 Nous pouvons constater que nos données ne sont pas équilibrées. Ce qui était attendu car, il y a forcément plus de sous-séquences qui 
-ne sont pas des fins de phrase que de sous-séquences qui sont des fins de phrases. (Il y a 10 fois plus de sous-séquences qui ne sont pas des fins de phrases (189000) que de sous-séquences qui le sont (19000)). 
+ne sont pas des fins de phrase que de sous-séquences qui sont des fins de phrases. (Il y a 10 fois plus de sous-séquences qui ne sont pas des fins de phrases (189000) que de sous-séquences qui le sont (19000)).
 
 À cause de ce déséquilibre, nous ne pouvons pas nous baser sur le f1 score du modèle en "weigthed average", meme si ce score est meilleur que le "macro average". Il ne serait pas pertinent de l'utiliser car, il privilégie la classe majoritaire. 
 
@@ -208,23 +236,24 @@ Le f1 score combine les mesures de rappel et de précision, offrant une évaluat
 
 Le fichier `results/arbitraire/rsultats.txt` présente les résultats détaillés des rapports de classification.
 
-
 ![graphe montrant les f1 score "macro average" des modèles](/model_test/results/arbitraire/models_f1_scores_visualization.png)
-Ce graphe nous permet de constater qu'avec les paramètres par défaut, le modèle RandomForestClassifier est le meilleur, avec un f1 score de 0,79. Le modèle avec le moins bon f1 score (0,65) est le SGDClassifier 
+Ce graphe nous permet de constater qu'avec les paramètres par défaut, le modèle RandomForestClassifier est le meilleur, avec un f1 score de 0,79. Le modèle avec le moins bon f1 score (0,65) est le SGDClassifier. (résultats complet: `/model_test/results/arbitraire`)
 
 Pour améliorer ces scores, nous pouvons essayer d'équilibrer nos données d'entraînement, pour voir si cela permet de réduire l'impact du déséquilibre.
+Pour ce faire, nous prenons autant de sous-séquences qui sont des fins de phrase que de séquences qui ne le sont pas, nos données de test restent inchangées.
 
 ![graphe montrant les f1 score "macro average" des modèles avec les données d'entrainement équilibrées](/model_test/results/arbitraire/models_f1_scores_balanced.png)
 
 L'équilibrage des données d'entraînement n'a pas permis d'améliorer les résultats, pour la majorité des modèles, il réduit même les scores. On peut l'expliquer par l'augmentation du déséquilibre.
-Les modèles ont tendance à classer la majorité des sous-séquences comme n'étant pas des fins de phrases.
+Les modèles ont tendance à classer la majorité des sous-séquences comme n'étant pas des fins de phrases. (
 
 ![Matrice de confusion pour le RandomForestClassifier avec les données d'entrainement équilibrées](/model_test/results/arbitraire/equilibre/confusion_matrix_2RandomForestClassifier.png)
 
 *Matrice de confusion pour le RandomForestClassifier avec les données d'entrainement équilibrées*
 
-Pour améliorer nos résultats, nous avons exploré une autre méthode plus précise pour la sélection des features : l'analyse de corrélation.
+On constate une réduction du nombre de faux positifs (1541 < 8916). Mais une augmentation du nombre de faux négatifs (14081 > 8093). Il y a aussi une réduction du nombre de vrais négatifs, les vrais positifs eux n'ont quasiment pas changé. (résultats complet: `/model_test/results/arbitraire/equilibre`) 
 
+Pour améliorer nos résultats, nous avons exploré une autre méthode plus précise pour la sélection des features : l'analyse de corrélation.
 
 #### b) Matrice de corrélations (correlation/global et correlation/numérique):
 L'utilisation de quatre features choisit arbitrairement a montré des limites. Nous avons décidé d'utiliser des matrices de corrélation pour identifier les features les plus significatives.
@@ -239,11 +268,11 @@ Cela nous permet de générer une matrice de corrélation globale: `correlation/
 
 Nous allons donc, dans un premier temps, nous concentrer sur les features qui sont numériques ou formatées en fractions.
 
-À partir de la première matrice `correlation/num_corr1.svg`, nous pouvons constater que les features qui possèdent une version et une version en fraction sont fortement corrélées.
+À partir de la première matrice `correlation/num_corr1.svg`, nous pouvons constater que les features qui possèdent une version numérique et une version en fraction sont fortement corrélées.
 
 Nous avons decider de supprimer les versions sous forme de fraction : 'duration_frac', 'beatfraction', 'IOI_frac', 'beat_fraction_str', 'IOR_frac'.
 
-Nous avons aussi identifié d'autres features avec des corrélations élevées, nous les avons enlevées : "diatonicinterval", "midipitch", "beat_str", car elles sont très fortement corréelles avec d'autres features.
+Nous avons aussi identifié d'autres features avec des corrélations élevées, nous les avons enlevées : "diatonicinterval", "midipitch", "beat_str", car elles sont très fortement corrélées avec d'autres features.
 
 Nous avons continué cette même démarche d'analyse de matrice de corrélations jusqu'à obtenir une matrice de correlation simplifiée.
 
@@ -253,19 +282,24 @@ Nous sélectionnons les attributs présents dans cette matrice : "duration", "be
 
 Dans un premier temps, nous le testons uniquement sur le RandomsForestClassifier, afin de verifier qu'il y ait bien une amélioration des résultats par rapport a la sélection arbitraire.
 
+![Matrice de confusion](/model_test/results/correlation/confusion_matrix_RandomForestClassifier.png)
+
+*Matrice de confusion pour le RandomForestClassifier*
+
+Avec les nouvelles features, on constate une baisse du nombre de faux positifs et faux négatifs, une augmentation des vrais positifs et vrais négatifs.
+
 En constatant une amélioration (augmentation d'environ 20% sur le f1 score), nous décidons de le tester sur les autres modèles.
 
-![graphe des f1 score des modeles](/model_test/results/correlation/models_f1_scores_visualization.png)
+![graphe des f1 score des modèles](/model_test/results/correlation/models_f1_scores_visualization.png)
 
-Malgré le changement de features, le score pour GaussianNB reste faible comparé aux autres modèles. En regardant sa matrice de confusion, on constate que le modèle a tendance à mal classer les fins de phrases, en les catégorisant comme n'étant pas des fins de phrases. 
+Malgré le changement de features, le score pour GaussianNB reste faible comparé aux autres modèles. En regardant sa matrice de confusion, on constate que le modèle a tendance à mal classer les fins de phrases, en les catégorisant comme n'étant pas des fins de phrases. (résultats complet: `/model_test/results/correlation`)
 
-Pour finir, nous avons testé sur le modèle RandomForestClassifier, l'ajout des features catégorielles. Nous avons constater que le f1-score diminuait, et que le modele avait tendance à mal classer les fins de phrases. De ce fait, nous n'allons pas ajouter de features catégorielles dans nos features sélectionnées.
+Pour finir, nous avons testé sur le modèle RandomForestClassifier, l'ajout des features catégorielles. Nous avons constaté que le f1-score diminuait, et que le modèle avait tendance à mal classer les fins de phrases. De ce fait, nous n'allons pas ajouter de features catégorielles dans nos features sélectionnées.
 Cette baisse de ce score après l'ajout de ces features peut s'expliquer par l'augmentation de la complexité des données due au OneHotEncoder qui crée une colonne par valeur unique présente dans la feature.
 
+### 6) choix de la taille des sous sequences
 
-### 4) choix de la taille des sous sequences
-
-### 5) choix des hyperparametres des modeles
+### 7) Choix des hyperparamètres des modèles
 
 ####
 
