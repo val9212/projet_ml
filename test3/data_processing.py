@@ -97,42 +97,49 @@ class DataProcessor:
         Create subsequences of fixed length from the data.
         """
         self.logger.info("Creating subsequences...")
-        list_columns = self.check_list_columns()
-
         subsequences = []
         labels = []
         ids = []
+        list_columns = self.check_list_columns()
 
-        # Iterate over each song in the dataset
-        for idx, row in tqdm(
-            self.data.iterrows(), total=self.data.shape[0], desc="Creating subsequences"
-        ):
-            song_id = row["id"]
-            sequence_length = len(row["scaledegree"])
+        for col in self.data.columns:
+            if col != 'id' and self.data[col].apply(lambda x: isinstance(x, list)).all():
+                list_columns.append(col)
 
-            # Calculate the number of subsequences for this song
-            num_subseq = sequence_length // self.window_size
+        for idx, row in tqdm(self.data.iterrows(), total=self.data.shape[0]):
+            song_id = row['id']
+            sequence_length = len(row['scaledegree'])
 
-            # Create non-overlapping subsequences
-            for i in range(num_subseq):
-                start_idx = i * self.window_size
+            if sequence_length == 0:
+                continue
+
+            start_idx = 0
+            while start_idx + self.window_size <= sequence_length:
                 end_idx = start_idx + self.window_size
 
                 subseq = {}
                 for col in list_columns:
                     subseq[col] = row[col][start_idx:end_idx]
-
-                # Check if the subsequence has the correct length
-                if len(subseq["scaledegree"]) == self.window_size:
-                    # The label is whether the last note in the subsequence is a phrase end
-                    label = subseq["phrase_end"][-1]
+                if len(subseq['scaledegree']) == self.window_size:
+                    label = subseq['phrase_end'][-1]
                     subsequences.append(subseq)
                     labels.append(label)
                     ids.append(song_id)
-                else:
-                    continue  # Skip incomplete subsequences
 
-        # Convert to DataFrame
+                start_idx += 2
+
+            if start_idx < sequence_length:
+                end_idx = sequence_length
+
+                subseq = {}
+                for col in list_columns:
+                    subseq[col] = row[col][start_idx:end_idx]
+                if len(subseq['scaledegree']) == self.window_size:
+                    label = subseq['phrase_end'][-1]
+                    subsequences.append(subseq)
+                    labels.append(label)
+                    ids.append(song_id)
+
         self.subsequences = pd.DataFrame(subsequences)
         self.subsequences["id"] = ids
         self.subsequences["label"] = labels

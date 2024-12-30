@@ -42,12 +42,7 @@ def main():
         (LogisticRegression(max_iter=1000), "LogisticRegression"),
         (SVC(), "SVC"),
         (GaussianNB(), "GaussianNB"),
-        (
-            RandomForestClassifier(
-                n_estimators=100, random_state=42, class_weight="balanced"
-            ),
-            "RandomForestClassifier",
-        ),
+        (RandomForestClassifier(n_estimators=100, random_state=42, class_weight="balanced"),"RandomForestClassifier",),
     ]
 
     for model, name in models:

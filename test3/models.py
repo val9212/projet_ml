@@ -1,10 +1,12 @@
 # models.py
-
-from sklearn.model_selection import GroupShuffleSplit
+from matplotlib import pyplot as plt
+from sklearn.model_selection import GroupShuffleSplit, train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 import numpy as np
 import logging
-
+from sklearn.metrics import RocCurveDisplay
+from sklearn.metrics import PrecisionRecallDisplay
+from sklearn.utils import resample
 
 class ModelTrainer:
     def __init__(self, features, labels, ids):
@@ -25,17 +27,52 @@ class ModelTrainer:
 
     def split_data(self):
         """
-        Split data into training and testing sets, grouped by song ID.
+        Split data into balanced training and testing sets.
         """
-        self.logger.info("Splitting data into training and testing sets...")
-        gss = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-        train_idx, test_idx = next(
-            gss.split(self.features, self.labels, groups=self.ids)
+        print("Balancing and splitting data into training and testing sets...")
+
+        # Combine features and labels into a single array for easier resampling
+
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
+            self.features,
+            self.labels,
+            test_size=0.2,
+            random_state=42,
+            stratify=self.labels
         )
-        self.X_train, self.X_test = self.features[train_idx], self.features[test_idx]
-        self.y_train, self.y_test = self.labels[train_idx], self.labels[test_idx]
-        self.logger.info(f"Training set shape: {self.X_train.shape}")
-        self.logger.info(f"Testing set shape: {self.X_test.shape}")
+        data = np.column_stack((self.X_train, self.y_train))
+
+
+        # Separate the majority (Y==0) and minority (Y==1) classes
+        data_majority = data[data[:, -1] == 0]
+        data_minority = data[data[:, -1] == 1]
+
+        # Downsample the majority class to match the minority class size
+        if len(data_majority) > len(data_minority):
+            data_majority_downsampled = resample(
+                data_majority,
+                replace=False,
+                n_samples=len(data_minority),
+                random_state=42
+            )
+            balanced_data = np.vstack((data_majority_downsampled, data_minority))
+        else:
+            data_minority_downsampled = resample(
+                data_minority,
+                replace=False,
+                n_samples=len(data_majority),
+                random_state=42
+            )
+            balanced_data = np.vstack((data_majority, data_minority_downsampled))
+        # Shuffle the balanced dataset
+        np.random.shuffle(balanced_data)
+
+        # Split back into features and labels
+        self.X_train = balanced_data[:, :-1]
+        self.y_train = balanced_data[:, -1].astype(int)
+
+        print(f"Training set shape: {self.X_train.shape}")
+        print(f"Testing set shape: {self.X_test.shape}")
 
     def add_model(self, model, name):
         """
@@ -70,7 +107,7 @@ class ModelTrainer:
         y_pred = model.predict(self.X_test)
         report = classification_report(self.y_test, y_pred, output_dict=True)
         cm = confusion_matrix(self.y_test, y_pred)
-        self.results[name] = {"classification_report": report, "confusion_matrix": cm}
+        self.results[name] = {"classification_report": report, "confusion_matrix": cm, "score": model.score(self.X_test, self.y_test)}
         self.logger.info(f"Evaluation completed for {name}.")
 
         # Print evaluation metrics
@@ -79,3 +116,5 @@ class ModelTrainer:
         print(classification_report(self.y_test, y_pred))
         print("Confusion Matrix:")
         print(cm)
+        RocCurveDisplay.from_estimator(model, self.X_test, self.y_test)
+        plt.show()

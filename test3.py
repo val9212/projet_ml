@@ -10,6 +10,7 @@ from sklearn.model_selection import GroupShuffleSplit, train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.preprocessing import LabelEncoder
+from sklearn.utils import resample
 
 class RandomForestPredictor:
     def __init__(self, dataset_path, window_size=8):
@@ -141,16 +142,50 @@ class RandomForestPredictor:
 
     def split_data(self):
         """
-        Split data into training and testing sets, grouped by song id.
-
-        https://scikit-learn.org/1.5/modules/generated/sklearn.model_selection.GroupShuffleSplit.html
+        Split data into balanced training and testing sets.
         """
-        print("Splitting data into training and testing sets...")
-        gss = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-        train_idx, test_idx = next(gss.split(self.features, self.labels, groups=self.ids))
+        print("Balancing and splitting data into training and testing sets...")
 
-        self.X_train, self.X_test = self.features[train_idx], self.features[test_idx]
-        self.y_train, self.y_test = self.labels[train_idx], self.labels[test_idx]
+        # Combine features and labels into a single array for easier resampling
+        data = np.column_stack((self.features, self.labels))
+
+        # Separate the majority (Y==0) and minority (Y==1) classes
+        data_majority = data[data[:, -1] == 0]
+        data_minority = data[data[:, -1] == 1]
+
+        # Downsample the majority class to match the minority class size
+        if len(data_majority) > len(data_minority):
+            data_majority_downsampled = resample(
+                data_majority,
+                replace=False,
+                n_samples=len(data_minority),
+                random_state=42
+            )
+            balanced_data = np.vstack((data_majority_downsampled, data_minority))
+        else:
+            data_minority_downsampled = resample(
+                data_minority,
+                replace=False,
+                n_samples=len(data_majority),
+                random_state=42
+            )
+            balanced_data = np.vstack((data_majority, data_minority_downsampled))
+        # Shuffle the balanced dataset
+        np.random.shuffle(balanced_data)
+
+        # Split back into features and labels
+        balanced_features = balanced_data[:, :-1]
+        balanced_labels = balanced_data[:, -1].astype(int)
+
+        # Train-test split with stratification for balance
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
+            balanced_features,
+            balanced_labels,
+            test_size=0.2,
+            random_state=42,
+            stratify=balanced_labels
+        )
+
         print(f"Training set shape: {self.X_train.shape}")
         print(f"Testing set shape: {self.X_test.shape}")
 
@@ -189,7 +224,7 @@ class RandomForestPredictor:
 
 if __name__ == '__main__':
 
-    predictor = RandomForestPredictor('MTC-FS-INST-2.0', window_size=1)
+    predictor = RandomForestPredictor('MTC-FS-INST-2.0', window_size=8)
     predictor.create_subsequences()
     predictor.preprocess_features()
     predictor.split_data()

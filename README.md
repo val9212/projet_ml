@@ -1,15 +1,13 @@
-Prédiction de fins de phrases musicales
+# Prédiction de fins de phrases musicales
 
-# OBJECTIFS : 
-Une pièce musicale peut être jouée ou écrite comme on peut énoncer un texte ou l’écrire. Comme un texte, la pièce musicale est
-structurée. Cette structure peut se décrire comme une suite de phrases. De ce fait, il est possible de déterminer toutes les fins 
-de phrases à l'aide de nombreux facteurs. Evidemment nous ne réliserons pas ce travail à la main en écoutant chaque morceau. 
-En utilisant des corpus annotés, nous pouvons mettre en place des algorithmes d’apprentissage de ces fins de phrase.
+## OBJECTIFS : 
+Une séquence musicale peut être jouée ou écrite, comme on peut énoncer un texte ou l'écrire. Comme un texte, une séquence musicale est
+Structurée. Cette structure peut se décrire comme une suite de phrases. De ce fait, il est possible de déterminer toutes les fins 
+De phrases à l'aide de nombreux facteurs. Évidemment, nous ne réaliserons pas ce travail à la main en écoutant chaque morceau, nous allons utiliser des corpus annotés. En les utilisant, nous pouvons mettre en place des algorithmes d'apprentissage capables de prédire les fins de phrases.
 
-Ainsi l'objectif de ce projet est de préparer des données, les explorer, construire et comparer des modèles prédictifs de fin de phrase musicale.
+Ainsi, l'objectif de ce projet est de préparer des données, les explorer, construire et comparer des modèles prédictifs de fin de phrase musicale.
 
-
-# MATERIELS : 
+## MATERIELS : 
 
 Pour répondre aux objectifs de ce projet, nous avons récupéré des données issues du Meertens Tune Collections 1. C’est
 un corpus de mélodies des Pays-Bas annotés par un ensemble d'attributs : 
@@ -18,189 +16,174 @@ Un objet mélodique contient des champs de métadonnées et plusieurs séquences
 
 Les champs de métadonnées sont : 
 
-	identifiant (string): Identifiant de la mélodie.
-	type ({vocal, instrumental}): Type de la chanson. vocal: a des paroles, instrumental: n'a pas de paroles.
-	année (int) : Année de publication de la chanson
-	famille tune (string) : Identifiant de la famille de syntonisations
-	tunefamily_full (string): Nom complet de la famille tune
-	freemètre (bool) : Si la mélodie a un (i.e libre pas de noted) mètre.
-	ann_bgcorpus (bool) : Les chansons de MTC-FS-INST-2.0 pour lesquelles cette valeur est True n'ont aucun rapport avec les chansons de MTC-ANN-2.0.1.
-	origine (string) : Le chemin du fichier ** kern dans la collection ESSEN, indiquant principalement l'origine géographique de la mélodie.
+- **id** `(string)`: Identifiant unique de la mélodie.
+- **type** `({vocal, instrumental})`: Indique le type de chanson (vocal / instrumental).
+- **year** `(int)`: Année de publication de la chanson.
+- **tunefamily** `(string)`: Identifiant de la famille mélodique.
+- **tunefamily_full** `(string)`: Nom complet de la famille mélodique.
+- **freemeter** `(bool)`: Indique si la mélodie a une structure rythmique (True / False).
+- **ann_bgcorpus** `(bool)`: Spécifie si la mélodie est indépendante des chansons d'un autre corpus, en l'occurrence MTC-ANN-2.0.1 (True / False).
+- **origin** `(string)`: Indique le chemin du fichier kern dans la collection ESSEN. Ce chemin renseigne aussi sur l'origine géographique de la mélodie.
+
+Les séquences caractéristiques correspondent aux séquences de notes dans une mélodie donnée. Elles renseignent sur les 61 caractéristiques distinctes: 
+
+- **pitch** `(string)` : Représentation de la hauteur de la note selon le format de music21.
+- **midipitch** `(int)` : Numéro MIDI représentant la hauteur de la note (de 0 à 108).
+- **pitch40** `(int)` : Représentation de la hauteur en base 40.
+- **contour3** `(string)` : Contour de la hauteur par rapport à la note précédente ('-' : Descendante, '=' : Égale, '+' : Montante, la première note a une valeur None).
+- **contour5** `(string)` : Contour détaillé de la hauteur par rapport à la note précédente ('--' : Descente d’au moins 3 intervalles MIDI, '-' : Descente normale, '=' : Égale, '+' : Ascension normale, '++' : Ascension d’au moins 3 intervalles MIDI, la première note a une valeur None).
+- **diatonicinterval** `(int)` : Intervalle diatonique entre la note actuelle et la précédente (en degrés d’échelle, la première note a une valeur None).
+- **chromaticinterval** `(int)` : Intervalle chromatique (différence midipitch) entre la note actuelle et la précédente (La première note a une valeur None).
+- **tonic** `(string)` : Classe de hauteur de la tonique pour la note actuelle (A à G avec altérations).
+- **mode** `(string)` : Mode de la note.
+- **scaledegree** `(int)` : Degré de la hauteur par rapport à l’échelle de la tonique (de 1 à 7).
+- **scaledegreespecifier** `(string)` : Spécification du degré.
+- **diatonicpitch** `(int)` : Hauteur diatonique de la note.
+- **timesignature** `(Fraction)` : Signature rythmique de la note, sous forme d’une fraction (Si aucune signature n’est notée, la valeur est None).
+- **beatstrength** `(float)` : Force métrique (entre 0.0 et 1.0) du temps d’apparition de la note (music21).
+- **metriccontour** `(string)` : Contour de la force métrique par rapport à la note précédente ('-' : Plus faible, '=' : Égale, '+' : Plus forte).
+- **imaweight** `(float)` : Poids métrique (entre 0.0 et 1.0) calculé par l’Analyse Métrique Interne.
+- **imacontour** `(string)` : Contour de poids métrique par rapport à la note précédente ('-' : Plus faible, '=' : Égale, '+' : Plus fort)
+- **duration** `(float)` : Durée de la note.
+- **duration_frac** `(Fraction)` : Durée de la note sous forme de fraction.
+- **duration_fullname** `(string)` : Nom complet de la durée de la note (music21).
+- **durationcontour** `(string)` : Contour de la durée par rapport à la note précédente ('-' : Plus courte, '=' : Égale, '+' : Plus longue, la première note a None).
+- **IOI** `(float)` : Intervalle de temps entre l'apparition de la note et celle de la note suivante (exprimé en unité de noire, la dernière note a None sauf si un silence suit).
+- **IOI_frac** `(Fraction)` : Intervalle IOI représenté sous forme de fraction.
+- **IOR** `(float)` : Ratio entre l'IOI de la note actuelle et celui de la note précédente (La première note a None).
+- **IOR_frac** `(Fraction)` : Ratio IOR exprimé sous forme de fraction.
+- **onsettick** `(int)` : Temps d'apparition de la note en ticks MIDI (le premier tick est 0).
+- **beatfraction** `(Fraction)` : Durée de la note relative à la durée d'un battement, exprimée en fraction (Si aucune signature rythmique n'est notée, la valeur est None).
+- **beat_str** `(string)` : Numéro du temps dans la mesure où se situe la note.
+- **beat_fraction_str** `(Fraction)` : Position relative de la note dans son temps, exprimée en fraction.
+- **beat** `(float)` : Position de la note dans la mesure, exprimée en unités de temps.
+- **songpos** `(float)` : Position de la note dans la chanson, normalisée entre 0.0 (début) et 1.0 (fin).
+- **beatinsong** `(Fraction)` : Position de la note dans la chanson, exprimée en unités de battement (par ex., 27/4 pour une note au 6e temps de la 7e mesure).
+- **nextisrest** `(bool)` : Indique si la note est suivie d'un silence (true / false, la dernière note a None).
+- **restduration_frac** `(Fraction)` : Durée du silence qui suit la note, exprimée en fraction (La valeur est None si aucun silence ne suit).
+- **phrase_ix** `(int)` : Numéro de la phrase musicale à laquelle la note appartient. La première phrase est indexée par 0.
+- **phrasepos** `(float)` : Position relative de la note dans sa phrase, entre 0.0 (début de la phrase) et 1.0 (fin de la phrase).
+- **phrase_end** `(bool)` : Indique si la note est la dernière de la phrase (true ou false).
+- **beatinphrase** `(Fraction)` : Position de la note dans sa phrase, exprimée en unités de battement.
+- **beatinphrase_end** `(Fraction)` : Position relative de la note dans la phrase, exprimée en unités de battement, où la dernière note de la phrase commence au premier battement de la dernière mesure.
+- **gpr2a_Frankland** `(float)` : Force de la frontière musicale suivant la note, calculée selon la règle GPR 2a de la quantification de la théorie GTTM par Frankland et Cohen.
+- **gpr2b_Frankland** `(float)` : Force de la frontière musicale suivant la note, calculée selon la règle GPR 2b de la quantification de la théorie GTTM par Frankland et Cohen.
+- **gpr3a_Frankland** `(float)` : Force de la frontière musicale suivant la note, calculée selon la règle GPR 3a de la quantification de la théorie GTTM par Frankland et Cohen.
+- **gpr3d_Frankland** `(float)` : Force de la frontière musicale suivant la note, calculée selon la règle GPR 3d de la quantification de la théorie GTTM par Frankland et Cohen.
+- **gpr_Frankland_sum** `(float)` : Somme des forces des frontières musicales suivant la note, en combinant les résultats des règles GPR 2a, 2b, 3a et 3d.
+- **lbdm_boundarystrength** `(float)` : Force globale de la frontière locale suivant la note, calculée selon le modèle de détection des frontières locales (Cambouropoulos).
+- **lbdm_spitch** `(float)` : Force de la frontière de hauteur (pitch) suivant la note, selon le modèle LBDM.
+- **lbdm_sioi** `(float)` : Force de la frontière d’intervalle entre les onsets (IOI) suivant la note, selon le modèle LBDM.
+- **lbdm_srest** `(float)` : Force de la frontière de silence suivant la note, selon le modèle LBDM.
+- **lbdm_rpitch** `(float)` : Degré de changement pour l’intervalle de hauteur suivant la note, selon le modèle LBDM.
+- **lbdm_rioi** `(float)` : Degré de changement pour l’intervalle entre onsets (IOI) suivant la note, selon le modèle LBDM.
+- **lbdm_rrest** `(float)` : Degré de changement pour le silence suivant la note, selon le modèle LBDM.
+- **pitchproximity** `(int)` : Expectative de la note basée sur la proximité de hauteur, calculée selon le facteur 1 de la réduction bi-factorielle de l’IR de Narmour par Schellenberg.
+- **pitchreversal** `(float)` : Expectative de la note basée sur l’inversion des hauteurs, calculée selon le facteur 2 de la réduction bi-factorielle de l’IR de Narmour par Schellenberg.
+
+> - **melismastate** `(string)` : Indique si la note fait partie d'un mélisme (plusieurs notes pour une syllabe)
+> - **lyrics** `(string)` : Syllabe de la parole associée à la note.
+> - **noncontentword** `(bool)` : Indique si le mot est un mot fonctionnel (non signifiant) dans la langue néerlandaise.
+> - **wordend** `(bool)` : Indique si la syllabe est la dernière (ou unique) d'un mot. Cette donnée est utilisée uniquement pour la première note d’un mélisme vocal.
+> - **wordstress** `(bool)` : Indique si la syllabe est accentuée dans le mot. Elle s'applique uniquement à la première note d’un mélisme vocal.
+> - **phoneme** `(string)` : Représentation phonétique de la syllabe associée à la note, utilisée uniquement pour la première note d’un mélisme vocal.
+> - **rhymes** `(bool)` : Indique si le mot qui se termine sur cette note rime avec un autre mot dans les paroles de la chanson (Cette donnée est utilisée uniquement pour la première note d’un mélisme vocal).
+> - **rhymescontentwords** `(bool)` : Indique si le mot qui se termine sur cette note rime avec un autre mot (en excluant les mots fonctionnels) dans les paroles de la chanson (Elle est utilisée uniquement pour la première note d’un mélisme vocal).
+
+## METHODOLOGIE : 
+
+### 1) Exploration des données (exploration.ipynb): 
+
+Une fois les données téléchargées, et les features de chaque séquence extraite, nous pouvons constater que chaque
+Séquence est représentée sous forme de liste Python. Chaque élément d'une liste correspond à une note. Notre jeu de données 
+est composé de 60 features, une target et un identifiant. Notre target est la colonne phrase_end qui donne pour chaque note une 
+Valeur booléenne True / False (True si la note est une fin de phrase et false si la note ne l'est pas).
+
+Nous pouvons aussi constater que les dernières features (lyrics, noncontentword, wordend, phoneme, rhymes, rhymescontentwords,
+wordstress, melismastate), correspondent aux lyrics et paroles des chansons, plus de la moitié de leurs données sont manquantes.
+Nous allons donc les retirer. Il nous reste 52 Feature.
+
+Nous pouvons aussi constater que certaines autres features contiennent pour certaines notes des valeurs None, comme par exemple pour diatonicinterval
+Où chaque première est un `None` car cette valeur dépend de la note d'avant. (Nous gardons ces features dans la suite de nos analyses)
+
+Nous pouvons constater que la taille des phrases dans les séquences du jeu de données est très variable, l'analyse de la taille (nombre de notes avant une note fin de phrases) nous permet de voir que les phrases font : 
+- En moyenne, 11 notes.
+- En moyenne 9 notes. 
+- Au maximum 238 notes.
+- Au minimum 1 note.
+
+Nous avons aussi analysé la taille des séquences, avec une représentation graphique.
+
+![Texte alternatif](/Visualisation/graphe_tailles_seqs.png)
+
+En rentrant plus dans le détail, nous pouvons voir que les séquences font:
+- En moyenne 72 notes.
+- Au maximum 1231 notes.
+- Au minimum 3 notes.
+
+Classification des features catégorielles et numériques qu'il nous reste:
+
+- numérique : 'scaledegree', 'imaweigth', 'pitch40', 'midipitch', 'diatonicpitch', 'diatonicinterval', 'chromaticinterval', 'pitchproximity', 'pitchreversal', 'duration', 'onsettick', 'phrasepos', 'phrase_ix', 'songpos', 'IOI', 'IOR', 'beatstrength', 'beat_str', 'beat', 'timesignature', 'gpr2a_Frankland', 'gpr2b_Frankland', 'gpr3a_Frankland', 'gpr3d_Frankland', 'gpr_Frankland_sum', 'lbdm_spitch', 'lbdm_sioi', 'lbdm_srest', 'lbdm_rpitch', 'lbdm_rioi', 'lbdm_rrest', 'lbdm_boundarystrength'
+- catégorielle : 'scaledegreespecifier', 'tonic', 'mode', 'metriccontour', 'nextisrest', 'duration_fullname', 'imacontour', 'pitch', 'contour3', 'contour5', 'durationcontour'
+- label/target : 'phrase_end'
+- Fraction : 'duration_frac', 'beatfraction', 'beatinsong', 'beatinphrase', 'beatinphrase_end', 'IOI_frac', 'beat_fraction_str', 'timesignature', 'restduration_frac', 'IOR_frac'
+
+*Les données sous forme de fractions sont reformatées en valeur numérique*
+
+### 2) créations de sous séquences et préparation des données : 
+
+Le jeu de données contient 18108 séquences, afin de trouver les fins de phrases dedans, nous allons les diviser en sous-séquences.
+
+Le script de création de sous-séquences parcours toutes les listes du jeu de données, et les divise en listes plus petites de tailles choisies.
+Les séquences ayant toutes des tailles, nous faisons attention à ce que les dernières sous-séquences ne soient pas tronquées.
+
+Exemple pour des sous-séquences de taille 4: 
+> [1,2,3,4,5,6,7,8,9,10] -> [1,2,3,4] [5,6,7,8] [7,8,9,10]
+
+Cette méthode nous permet bien de récupérer des listes formant des sous-séquences en étant toutes de la même taille. Mais, en réalisant
+Ce découpage, on perd beaucoup de sous-séquences. Nous allons réaliser un décalage d'une valeur qu'on peut définir. 
+
+Exemple pour des sous-séquences de taille 4 avec un décalage de 2 (4/2): 
+> [1,2,3,4,5,6,7,8,9,10] -> [1,2,3,4] [3,4,5,6] [5,6,7,8] [7,8,9,10]
+
+Il faut cependant éviter de générer toutes les sous-séquences, car cela génère différents problèmes:
+- Augmentation des coûts en termes de calcul et de mémoire. Générer toutes les sous-séquences demande plus d'espace mémoire pour les stocker, de plus cela augmenterait le temps de calculs.
+- Forte redondance, les sous-séquences sont très similaires les unes des autres, entraînant des calculs inutiles.
+- Overfitting, en faisant de l'apprentissage supervisé avec nos modèles, risque d'apprendre des informations redondantes trop spécifiques.
+
+### 3) Choix des features:
+
+Pour permettre au modèle de prédire correctement les fins de phrases, nous devons lui fournir les données qui lui sont utiles. Cependant, il n'est pas simple de savoir
+quelles sont les features utiles pour prédire une fin de phrase en se basant uniquement sur la description de ses dernières. Afin de répondre à cette problématique, nous avons testé 3 hypotheses.
+
+#### a) Choix arbitraire :
+Pour commencer, nous avons choisi de manière arbitraire 4 features numériques pour tester l'implémentation de notre script de division des séquences en sous-séquences.
+Nous avons donc sélectionné les features suivantes : "scaledegree", "duration", "midipitch", "beatstrength".
+Afin de rendre les données comptables avec tous les modèles, nous remplaçons les valeurs manquantes par des 0.
+
+Cela nous permet de tester différents modèles sur des jeux de données simples, sans avoir besoin de reformater les données.
+Une fois les séquences découpées en sous-séquences, nous avons pu tester différents modèles avec les paramètres par défaut : 
+- **KNeighborsClassifier**: Classifie un point en fonction des classes majoritaires de ses k-plus proches voisins, idéal pour des frontières complexes, mais sensible aux dimensions élevées.
+- **DecisionTreeClassifier**: Utilise une structure arborescente pour diviser les données selon les caractéristiques les plus informatives, facile à interpréter, mais sujette au surapprentissage.
+- **SGDClassifier**: Implémente une descente de gradient stochastique pour des modèles linéaires, efficace pour les grands volumes de données et des flux de données en continu.
+- **LogisticRegression**: Modèle linéaire qui prédit des probabilités pour des classes, bien adapté aux problèmes binaires et robustes avec régularisation.
+- **SVC**: Utilise des marges maximales pour classifier des données, efficace pour les problèmes non linéaires grâce à des noyaux, mais coûteux en temps et mémoire.
+- **GaussianNB**: Classificateur bayésien qui suppose des distributions normales pour chaque caractéristique, rapide et performant avec des hypothèses simplifiées.
+- **RandomForestClassifier**: Ensemble d'arbres de décision entraînés sur des sous-échantillons aléatoires, robuste au surapprentissage et performant sur des jeux de données variés.
+
+Pour commencer, nous avons tester avec une taille de 4, sur 1/3 du jeu de données.
+
+Les résultats des différents modèles nous permettent de constater que:
+Le modèle RandomForestClassifier est le modèle qui prédit le mieux les fins de phrases, avec le modèle SVC.
+> Pour réaliser les diffèrents test suivant nous travaillerons dans un premier temps avec le RandomForestClassifier, il est le plus performant et beaucoup plus rapide que SVC. 
+
+Que les données sont pas équilibrées, il y a beaucoup plus de sous sequences qui ne sont pas des fin de phrases que sequences qui le sont.
+> Sans travailler sur des données equilibrées, les modeles ont tendances a predire des sous sequences fin de phrases comme n'en etant pas.
+
+#### b) Matrice de corrélations :
+L'utilisation de seulement de ces 4 features ne permet pas d'obtenir de bons résultats. Il est donc nécessaire de changer d'approche pour identifier les features ayant un impact significatif sur notre cible.
+L'utilisation d'une matrice de corrélation répond à cette problématique. Les matrices de corrélation permettent de mettre en évidence l'impact des attributs sur la cible. Elles permettent également d'identifier les features fortement corrélées entre elles, qui peuvent être supprimées afin d'éviter de biaiser l'apprentissage du modèle.
 
 
-Les séquences caractéristiques correspondent aux séquences de notes dans une mélodie donnée. Elles renseignent sur les 72 caractéristiques distinctes : 
-
-	tangage (str) : Pitch de la note en représentation de chaîne telle que définie dans musique21.
-	midipitch (int) : Numéro de note MIDI représentant la hauteur.
-	pitch40 (int) : Passer base40 représentation.
-	contour3 (str) : Contour de la hauteur par rapport à la note précédente. La première note est None.
-	contour5 (str) : Contour de la hauteur par rapport à la note précédente, avec des sauts ≥ 3 en midipitch. La première note est None.
-	intervalle diatonique (int) : Intervalle diatonique par rapport à la note précédente. La première note est None.
-	intervalle chromatique (int) : Différence de midipitch par rapport à la note précédente. La première note est None.
-	tonique (str) : Classe de hauteur de la tonique pour la note actuelle.
-	mode (str) : Mode de la note actuelle (ex. major, minor, etc.).
-	scaledegree (int) : Degré d'échelle du terrain (1-7).
-	scaledegreespecifier (str) : Spécificateur du degré d'échelle (ex. P, M, m, etc.).
-	diatonicpitch (int) : Pitch diatonique de la note (à partir de la tonique dans l'octave 0).
-	timesignature (str) : Signature horaire pour la note actuelle (n/d ou None si absente).
-	force de battement (float) : Poids métrique au moment de l'apparition de la note. None si absente.
-	métriquecontour (str) : Contour du poids métrique par rapport à la note précédente. Première note est None.
-	poids ima (float) : Poids métrique calculé par l'analyse métrique interne.
-	imacontour (str) : Contour du poids métrique (IMA) par rapport à la note précédente. Première note est None.
-	durée (float) : Durée de la note (quarternote = 1.0).
-	durée_frac (str) : Durée de la note en fraction.
-	durée_fullname (str) : Nom complet de la durée.
-	duréecontour (str) : Comparaison de durée avec la note précédente. Première note est None.
-	IOI (float) : Intervalle de temps entre les débuts de notes successifs. Dernière note est None.
-	IOI_frac (str) : IOI en fraction.
-	IOR (float) : IOI relatif à la note précédente. Première et dernière note sont None.
-	IOR_frac (str) : IOR en fraction.
-	début (int) : Début de la note en tiques MIDI.
-	beatfraction (str) : Durée de la note relative au temps.
-	beat_str (str) : Temps dans la mesure (1er temps = 1).
-	beat_fraction_str (str) : Position relative de la note dans le temps.
-	battre (float) : Position en unités de battement.
-	songpos (float) : Position relative de la note dans la chanson (0.0-1.0).
-	beatinsong (str) : Position de la note en unités de battement dans la chanson.
-	nextisrest (bool) : Indique si la note est suivie d'un repos.
-	restduration_frac (str) : Durée du repos suivant, si présent.
-	phrase_ix (int) : Numéro de série de la phrase contenant la note.
-	phrasepos (float) : Position de la note dans la phrase (0.0-1.0).
-	phrase_fin (bool) : Si la note est la dernière d'une phrase.
-	phrase béatine (str) : Apparition de la note dans la phrase en unités de battement.
-	beatinphrase_end (str) : Position dans la phrase en battement à partir de la fin.
-	mélismastate (str) : Rôle de la note dans un mélisme (start, in, end).
-	paroles (str) : Texte associé à la note (mélodies vocales uniquement).
-	non-contenu (bool) : Si les paroles sont un mot non contenu (mélodies vocales uniquement).
-	mot-minute (bool) : Si la syllabe est la dernière du mot.
-	stress de mots (bool) : Si la syllabe est accentuée.
-	phonème (str) : Phonème associé à la syllabe.
-	rimes (bool) : Si le mot se termine par une rime.
-	rimescontentwords (bool) : Si le mot se termine par une rime avec un mot de contenu.
-	gpr2a_Frankland (float) : Force de frontière (GPR 2a).
-	gpr2b_Frankland (float) : Force de frontière (GPR 2b).
-	gpr3a_Frankland (float) : Force de frontière (GPR 3a).
-	gpr3d_Frankland (float) : Force de frontière (GPR 3d).
-	gpr_Frankland_sum (float) : Somme des forces de frontière GPR.
-	lbdm_bounderstrength (float) : Résistance globale des limites locales.
-	lbdm_spitch (float) : Force de la limite de hauteur.
-	lbdm_sioi (float) : Force de la limite IOI.
-	lbdm_srest (float) : Force de la limite de repos.
-	lbdm_rpitch (float) : Changement dans l'intervalle de hauteur.
-	lbdm_rioi (float) : Changement dans l'intervalle inter-apparition.
-	lbdm_rrest (float) : Changement dans le repos suivant.
-	pitchproximité (int) : Attente selon le facteur pitchproximity.
-	pitchreversal (float) : Attente selon le facteur pitchreversal.
-
-
-# METHODOLOGIE : 
-
-Sommairement voici les étapes méthodologiques que nous avons déployés : 
-
-0) Selection des modèles de classifications testés : 
-	A partir de nos connaissances nous avons selectionnés 7 classifieurs que nous souhaitons comparés : 
-		-KneighborsClassifier : Classifie un point en fonction des classes majoritaires de ses k-plus proches voisins, 
-					idéal pour des frontières complexes mais sensible aux dimensions élevées.
-
-		-DecisionTreeClassifier : Utilise une structure arborescente pour diviser les données selon les caractéristiques les plus informatives, 
-					facile à interpréter mais sujette au surapprentissage.
-
-		-SGDClassifier : 	Implémente une descente de gradient stochastique pour des modèles linéaires, 
-					efficace pour des grands volumes de données et des flux de données en continu.
-
-		-LogisticRegression :	Modèle linéaire qui prédit des probabilités pour des classes, 
-					bien adapté aux problèmes binaires et robustes avec régularisation.
-
-		-SVC :			Utilise des marges maximales pour classifier des données, 
-					efficace pour les problèmes non linéaires grâce à des noyaux mais coûteux en temps et mémoire.
-
-		-GaussianNB : 		Classificateur bayésien qui suppose des distributions normales pour chaque caractéristique, 
-					rapide et performant avec des hypothèses simplifiées.
-
-		-RandomForestClassifier :Ensemble d'arbres de décision entraînés sur des sous-échantillons aléatoires, 
-					robuste au surapprentissage et performant sur des jeux de données variés.
-
-
-1) Analyse des séquences de notes par mélodie:
-	Sur les 72 caractéristiques, certaines apportent des informations similaires.
-	Certaines ne sont pas corrélés ou dépendantes des fins de phrase. 
-	Dans cette étape, nous avons selectionné certaines caractéristiques pour poursuivre notre étude.
-	Nous avons choisis manuellement de retirer/selectionner les variables ayant un inetret dans notre etude.
-
-2) Analyse des datas : 
-	Une chanson est une succession de caractéristiques pour chaque attribut. Le nombre de donnée est variable d'une chanson à une autre mais peut être de tailles très importante 
-	rendant complexe notre analyse. Nous avons décidé de réduire en nombre les informations. Pour ce faire nous avons assembler les données par lot de 4 formant des sous séquences. 
-	Afin d'analyser les données du mieux possible, nous avons convertit les données en tableau. Chaque colonne représentant un attribut différent et chaque ligne une sous séquence
-	(sous forme de liste). 
-	Enfin, nous avons normaliser les données afin de pouvoir tester nos modèles sur nos données. 
-	
-3) Test sur l'ensemble des models 
-
-	On constate un déséquilibre entre le nombre de Positifs et de Négatifs ce qui biaisent nos résultats. Les chiffres semblent indiqué des résultats plutôt corrects mais
-	le surnombre de positifs dans notre jeu d'apprentissage font qu'ils ont surappris. Le modèle va préférer associer l'étiquette positif à l'ensemble du jeu plutot que 
-	de chercher les négatifs. 
-
-4) Test sur l'ensemble des models en ayant ajusté le jeu d'entrainement de 50% de positif et de 50% de négatif 
-
-	On constate des métriques avec de moins bons résultats mais nous avons effacé le biais issue du surapprentissage des etiquettes positifs. 
-
-
-
-
-
-
-# METHODES ALGORITHMIQUES:
-
-Pour répondre aux objectifs de ce projet, nous avons implémenter un code Python. 
-Ce code est écrit en programmation orienté objet. Nous avons fait ce choix pour faciliter la lisibilité de ce code et le rendre plus structuré. 
-Detail des classes etc.
-
-
-
-# RESULTATS INTERMEDIAIRES : 
-
-1) Caractéristiques selectionnés : 
-Caractéristiques qui semblent être liés aux fins de phrase (choix manuel) :
-
-	phrase_ix : le numéro de la phras peut fournir un contexte séquentiel important.
-	phrasepos : la position de la note dans une phras est directement lié à la fin de phrase.
-	beatinphrase_end : Position dans la phrase en battement à partir de la fin. ( caractéristique spécifiquement lié à la fin de phrase) 
-	durée : fin de phrase sont souvent plus longues
-	beatfraction : durée de la note relative au temps. 
-	nextisrest : si la note suivante est un repos, il y a plus de chance que ce soit une fin de phrase
-	tonique : Les notes de fin sont souvent dans la tonique
-	intervalle diatonique : Compare la tonique d'une note à la tonique de la note précédente
-	force de battement : une force métrique peut suggérer un point conclusif
-	métriquecontour : un changement de contour peut indiquer une cadence ou une conclusion. 
-
-Carctéristiques qui ont une importance à partir de la méthode Importance_features:
-
-3) Mettre des resultats de ce qui a ete fait. 
-
-	Après avoir fait un premier test sur l'ensemble de notre jeu de donnée nous avons obtenus comme mielleur résultat: 
-	
-	Pour le test RandomForest: 
-	
-	Matrice de confusion : 	187257	46413
-				7811	17454
-
-	Precision 0.97
-	Recall : 0.80
-	f1-score : 0.80
-
-4) Test sur l'ensemble des models en ayant ajusté le jeu d'entrainement de 50% de positif et de 50% de négatif 
-
-	Pour le test RandomForest: 
-	
-	Matrice de confusion : 	9887	1808
-				1764	9931
-
-	Precision 0.85
-	Recall : 0.85
-	f1-score : 0.85
-
-# RESULTAT FINAL : 
-
-
-# DISCUSSION : 
+#### c) RandomForest : 
 
