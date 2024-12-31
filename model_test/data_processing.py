@@ -8,25 +8,35 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from fractions import Fraction
 
 class DataProcessor:
-    def __init__(self, dataset_path, numerical_columns, selected_feature, window_size=8, step=4):
+    def __init__(self, dataset_path, numerical_columns, selected_feature, refactor, cat_columns, norm_columns, window_size=8, step=4):
         """
-        Initialize the DataProcessor.
+        Classe pour charger, nettoyer, segmenter et transformer des données musicales pour une tâche d'apprentissage automatique.
 
-        Parameters:
-        - dataset_path: Path to the MTC-FS-INST dataset.
-        - window_size: Length of the subsequences to be created.
+                :param dataset_path: str
+                    Le chemin vers le jeu de données.
+                :param numerical_columns: list
+                    Liste des colonnes contenant des données numériques nécessitant un nettoyage.
+                :param selected_feature: list
+                    Liste des colonnes choisies pour constituer les features.
+                :param refactor: list
+                    Colonnes ou indices nécessitant une transformation spécifique.
+                :param cat_columns: list
+                    Colonnes à encoder en One-Hot.
+                :param norm_columns: list
+                    Colonnes à normaliser via StandardScaler.
+                :param window_size: int
+                    La taille pour créer les sous-séquences. (defaut = 8)
+                :param step: int
+                    Le pas (step) pour décaler la fenêtre. (defaut = 8)
         """
         self.dataset_path = dataset_path
         self.window_size = window_size
         self.step = step
         self.selected_feature = selected_feature
         self.numerical_columns = numerical_columns
-
-        # Prise en compte pour des données specifiques
-        self.refactor = [4,5,6,7,8,9,10,11,12,13,14,15]
-        self.cat_columns = []
-        self.num_columns = []
-
+        self.refactor = refactor
+        self.cat_columns = cat_columns
+        self.num_columns = norm_columns
         self.data = None
         self.subsequences = None
         self.features = None
@@ -36,7 +46,7 @@ class DataProcessor:
 
     def load_data(self):
         """
-        Chargement des données en utilisant MTCFeatureLoader et conversion en DataFrame.
+        Charge les données brutes depuis le chemin spécifié en utilisant MTCFeatureLoader et les convertit en un DataFrame.
         """
         fl = MTCFeatureLoader(self.dataset_path)
         seqs = fl.sequences()
@@ -50,7 +60,7 @@ class DataProcessor:
 
     def clean_data(self):
         """
-        Clean the data by handling missing values and removing unnecessary columns.
+        Nettoie le jeu de données en retirant les colonnes inutiles et en remplaçant les valeurs manquantes par des zéros.
         """
         # Retirer les features lyrics
         x = self.data.keys()
@@ -66,7 +76,7 @@ class DataProcessor:
 
     def create_subsequences(self):
         """
-        Créer des sous sequences à partir d'une taille et d'un pas défini.
+        Crée des sous-séquences à partir des données, selon une taille et un décalage données.
         """
         subsequences = []
         labels = []
@@ -116,14 +126,22 @@ class DataProcessor:
         self.subsequences["label"] = labels
 
     def process_features(self):
+        """
+        Transforme les features et les labels pour en faire des entrées directement utilisables dans un modèle de Machine Learning.
 
+            - Étend les données avec `selected_feature`.
+            - Encode les labels avec LabelEncoder.
+            - Applique des transformations aux colonnes sélectionnées (refactor).
+            - Effectue un encodage OneHot et une normalisation via ColumnTransformer.
+        """
         feature_arrays = []
         for idx, row in tqdm(self.subsequences.iterrows(), total=self.subsequences.shape[0], desc="Processing subsequences"):
             feature_vector = []
+
+            # on étend les sequences.
             for col in self.selected_feature:
                 feature_vector.extend(row[col])
             feature_arrays.append(feature_vector)
-            # on étend les sequences.
 
         self.features = np.array(feature_arrays)
         self.labels = np.array(self.subsequences['label'])
@@ -132,6 +150,7 @@ class DataProcessor:
         label_encoder = LabelEncoder()
         self.labels = label_encoder.fit_transform(self.labels)
 
+        # Reformatage des fractions en valeur numérique
         for x in self.refactor:
             # Transformation de chaque élément dans la colonne
             self.features[:, x] = [

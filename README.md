@@ -331,13 +331,13 @@ Permet de gérer les problèmes liés aux données déséquilibrées en ajustant
 
 Voici la liste des hyperparamètres du DecisionTreeClassifier que nous allons tester:
 
-- max_depth: [10, 20, None]
+- max_depth: [10, 20, None] -> 
 Spécifie la profondeur maximale des arbres (La valeur "None" indique qu'il n'y a pas de limite).
-- criterion: ['gini', 'entropy']
+- criterion: ['gini', 'entropy'] -> 
 Critère utilisé pour évaluer la qualité de la séparation des branches dans les arbres.
-- min_samples_split: [2, 5, 10]
+- min_samples_split: [2, 5, 10] -> 
 Détermine le nombre minimal d'échantillons requis pour diviser un nœud interne.
-- class_weight: ['balanced', None]
+- class_weight: ['balanced', None] ->
 Permet de gérer les problèmes liés aux données déséquilibrées en ajustant les poids des classes.
 
 Les meilleurs hyperparametres sont: 'class_weight': None, 'criterion': 'gini', 'max_depth': 10, 'min_samples_split': 1
@@ -381,7 +381,8 @@ Pour réaliser ce projet, différents scripts Python ont été réalisés, ils o
     │   └───results             # Contient tous les résultats des tests réalisés
     │      ├───arbitraire       # Contient les résultats des tests des modèles avec le choix des features arbitraires
     │      │   └───equilibre    # Contient les résultats des tests des modèles avec le choix des features arbitraires équilibrés
-    │      └───correlation      # Contient les résultats des tests des modèles avec le choix des features par corrélation
+    │      ├───correlation      # Contient les résultats des tests des modèles avec le choix des features par corrélation
+    │      └───final            # Contient les résultats des tests des modèles avec les hyperparamètres
     ├───size                    # Contient le notebook permettant de tester les différentes tailles 
     └───visualisation           # Contient le notebook de visualisation des données
 
@@ -405,23 +406,38 @@ Pour réaliser nos tests sur les hyperparamètres, nous avons réalisé un noteb
 - `hyper_randomforest.ipynb`: Test des différents hyperparamètres sur le modèle RandomForestClassifier.
 - `hyper_sgdc.ipynb`: Test des différents hyperparamètres sur le modèle SGDC.
 
-### modele_test
+### model_test
 
 Pour entraîner les modèles de manière automatique, nous avons développé un programme Python. 
 
 Ce programme Python est capable de préparer les données de notre jeu de données, et de tester différents modèles prédéfinis.
 Pour fonctionner, nous devons définir: 
-- size : la taille des sous-séquences
-- step : le décalage entre chaque sous-séquence
-- selected_columns : les colonnes sélectionnées
-- models : la liste de modèles à tester 
+- `size` : la taille des sous-séquences
+- `step` : le décalage entre chaque sous-séquence
+- `selected_column` : les colonnes sélectionnées
+- `models` : la liste de modèles à tester 
 
 Le programme affiche les rapports de classifications, les matrices de confusions et il crée et enregistre pour chaque modèle la matrice de confusions et la courbe ROC.
-Pour finir, il crée une figure de comparaison des f1 scores (macro average) pour analyser les différences de performances globales des modèles.
+À la fin, il crée une figure de comparaison des f1 scores (macro average) pour analyser les différences de performances globales des modèles.
 
 Ce programme est composé de 3 fichiers pour fonctionner :
-- un fichier main : qui permet d'exécuter le programme.
-- un fichier data_processing : qui contient la classe DataProcessor, qui contient toutes les méthodes qui permettent de préparer les données
+- `main.py`: qui permet d'exécuter le programme.
+- `data_processing.py`: qui contient la classe DataProcessor.
+> La classe DataProcessor est composée de 4 méthodes:
+> - load_data -> Charge les données brutes depuis le chemin spécifié en utilisant MTCFeatureLoader et les convertit en un DataFrame.
+> - clean_data -> Nettoie le jeu de données en retirant les colonnes inutiles et en remplaçant les valeurs manquantes par des zéros.
+> - create_subsequences -> Crée des sous-séquences à partir des données, selon une taille et un décalage données.
+> - process_features -> Transforme les features et les labels pour en faire des entrées directement utilisables dans un modèle de Machine Learning.
+- `models.py`: qui contient la classe DataProcessor.
+> La classe ModelTrainer est composée de 4 méthodes:
+> - split_data -> Divise les données en ensemble d'entraînement et de test de manière stratifiée.
+> - add_model -> Ajoute un modèle à la liste des modèles à entraîner et évaluer. 
+> - train_and_evaluate -> Entraîne et évalue tous les modèles ajoutés au ModelTrainer.
+> - evaluate_model -> Évalue un modèle unique et stocke les résultats.
+
+- `model_test_step.ipynb`: Ce notebook permet de voir ce que fait le programme étape par étape (seulement sur un seul modèle).
+
+Les résultats de ses scripts sont placés dans le dossier `results/`
 
 ### size 
 
