@@ -389,10 +389,21 @@ Pour réaliser ce projet, différents scripts Python ont été réalisés, ils o
 
 Pour réaliser nos matrices de corrélation, nous avons créé deux scripts python.
 
-- global.py: Ce script permet de réaliser la matrice de correlation global.
-- numerique.py: Ce script contient une fonction permettant de créer des matrices de corrélation en sélectionnant les colonnes que nous souhaitons garder.
+- `global.py`: Ce script permet de réaliser la matrice de correlation global.
+- `numerique.py`: Ce script contient une fonction permettant de créer des matrices de corrélation en sélectionnant les colonnes que nous souhaitons garder.
 
-Les résultats de ses scripts sont placés dans le dossier `results`
+Les résultats de ses scripts sont placés dans le dossier `results/`
+
+### Hyperparametres
+
+Pour réaliser nos tests sur les hyperparamètres, nous avons réalisé un notebook par modèles.
+
+- `hyper_decisiontree.ipynb`: Test des différents hyperparamètres sur le modèle DecissionTreeClassifier.
+- `hyper_gaussiannb.ipynb`: Test des différents hyperparamètres sur le modèle GaussinNB.
+- `hyper_kneighboors.ipynb`: Test des différents hyperparamètres sur le modèle KNeighborsClassifier.
+- `hyper_logisticregression.ipynb`: Test des différents hyperparamètres sur le modèle LogisticRegression.
+- `hyper_randomforest.ipynb`: Test des différents hyperparamètres sur le modèle RandomForestClassifier.
+- `hyper_sgdc.ipynb`: Test des différents hyperparamètres sur le modèle SGDC.
 
 ### modele_test
 
@@ -416,9 +427,14 @@ Ce programme est composé de 3 fichiers pour fonctionner :
 
 Pour réaliser nos tests sur les tailles de sous-séquences, nous avons réalisé un notebook.
 
-- model_test_size.ipynb: Ce notebook permet de réaliser une validation croisée sur différentes tailles de sous-séquences et sur différents modèles. Il nous donne un graphe d'évolution de la performance des modèles en fonction de la taille des sous-séquences.
-- model_size.png: la figure des résultats.
+- `model_test_size.ipynb`: Ce notebook permet de réaliser une validation croisée sur différentes tailles de sous-séquences et sur différents modèles. Il nous donne un graphe d'évolution de la performance des modèles en fonction de la taille des sous-séquences.
+- `model_size.png`: La figure des résultats.
 
-### hyperparametres
+### Visualisation
 
+Pour réaliser nos analyses sur le jeu de données, nous avons réalisé un notebook.
 
+- `selection_données.ipynb`: Ce notebook permet de réaliser les analyses de base sur le jeu de données.
+- `graphe_tailles_seqs.png`: La figure de la variation de la taille des séquences.
+- `time_test.png`: La figure montrant le temps d'application du test des modèles.
+- `time_training.png`: La figure montrant le temps d'entrainement des modèles.

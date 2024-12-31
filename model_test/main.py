@@ -62,7 +62,7 @@ def main(window_size, step, selected_columns, models):
 if __name__ == "__main__":
     size = 4
     step = 2
-    selected_columns = ["duration", "beatinphrase", 'restduration_frac', "beatinphrase_end", "IOI", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", 'imaweight']
+    selected_columns = ["duration", "beatinphrase", 'restduration_frac', "beatinphrase_end", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", 'imaweight']
     models = [
         (KNeighborsClassifier(), "KNeighborsClassifier"),
         (DecisionTreeClassifier(), "DecisionTreeClassifier"),
