@@ -292,8 +292,8 @@ Nous obtenons donc les résultats suivants:
 
 ![graphe des scores de chaque modèle en fonction des différentes tailles de sous-séquences](/size/model_size.png)
 
-Ce graphique nous permet de constater que de manieres generales, les performances des modeles on tendances a diminuer lorsque la taille des sous-séquences augmente.
-Cependant tout les modeles ne sont pas autant impacté.
+Ce graphique nous permet de constater que de manière générale, les performances des modèles ont tendance à diminuer lorsque la taille des sous-séquences augmente.
+Cependant tous les modèles ne sont pas autant impactés.
 
 - RandomForestClassifier: Le modèle reste stable malgré le changement de la taille des sous-séquences, avec des scores constamment élevés et une faible variation. Il semble bien adapté à toutes les tailles de sous-séquences.
 - DecisionTreeClassifier: Le modèle réagit de manière similaire au RandomForestClassifier. Il a un score légèrement plus faible et une petite baisse pour les grandes tailles de sous-séquences.
@@ -303,19 +303,68 @@ Cependant tout les modeles ne sont pas autant impacté.
 - GaussianNB: Le modèle est très dépendant de la taille des sous-séquences. Les scores chutent fortement dès que la taille des sous-séquences augmente.
 
 Les modeles etant plus performant sur des petites tailles de sous séquences, nous allons selectionner une taille de sous séquences de 4.
-Nous ne choissisons pas de generer des sous sequences de taille de 2 avec un decallage de 1, car cela reviendrait a generer toutes les sous séquences possibles. Ce qui genere beacoup de redondance dans les données.
+Nous ne choissisons pas de generer des sous sequences de taille de 2 avec un decallage de 1, car cela reviendrait à generer toutes les sous séquences possibles. Ce qui genere beacoup de redondance dans les données.
 
 ### 6) Choix des hyperparamètres des modèles
 
+Il est possible d'améliorer les performances de nos modèles en ajustant leurs hyperparamètres. Ces derniers permettent également de réduire le risque de sur-apprentissage.
+
+Les hyperparamètres sont des paramètres spécifiques au modèle que nous définissons manuellement, car ils ne sont pas appris à partir des données. 
+Chaque modèle possède ses propres hyperparamètres, mais il n'est pas toujours possible ou nécessaire de tous les tester.
+
+Pour optimiser les hyperparamètres, une méthode couramment utilisée est GridSearchCV(). Cette fonction teste toutes les combinaisons d'hyperparamètres que nous lui fournissons et effectue une validation croisée pour évaluer la performance de chaque configuration.
+
 #### RandomForestClassifier
+
+Voici la liste des hyperparamètres du RandomForestClassifier que nous allons tester:
+
+- n_estimators: [100, 200, 500]
+Définit le nombre maximal d'arbres dans la forêt.
+- max_depth: [10, 20, None]
+Spécifie la profondeur maximale des arbres. Une valeur "None" indique qu'il n'y a pas de limite.
+- criterion: ['gini', 'entropy']
+Critère utilisé pour évaluer la qualité de la séparation des branches dans les arbres.
+- class_weight: ['balanced', None]
+Permet de gérer les problèmes liés aux données déséquilibrées en ajustant les poids des classes.
 
 #### DecisionTreeClassifier
 
+Voici la liste des hyperparamètres du DecisionTreeClassifier que nous allons tester:
+
+- max_depth: [10, 20, None]
+Spécifie la profondeur maximale des arbres (La valeur "None" indique qu'il n'y a pas de limite).
+- criterion: ['gini', 'entropy']
+Critère utilisé pour évaluer la qualité de la séparation des branches dans les arbres.
+- min_samples_split: [2, 5, 10]
+Détermine le nombre minimal d'échantillons requis pour diviser un nœud interne.
+- class_weight: ['balanced', None]
+Permet de gérer les problèmes liés aux données déséquilibrées en ajustant les poids des classes.
+
+Les meilleurs hyperparametres sont: 'class_weight': None, 'criterion': 'gini', 'max_depth': 10, 'min_samples_split': 1
+
 #### KNeighborsClassifier
+
+Voici la liste des hyperparamètres du KNeighborsClassifier que nous allons tester:
+
+- n_neighbors : [3, 5, 10, 15]
+Détermine le nombre de voisins à prendre en compte pour la classification ou la régression.
+- weights : ['uniform', 'distance']
+Spécifie la méthode de pondération des voisins. 'uniform' applique un poids égal à tous les voisins, 'distance' attribue des poids inversement proportionnels à la distance.
+- metric : ['minkowski', 'euclidean', 'manhattan']
+Définit la métrique utilisée pour calculer les distances entre les points.
+- p : [1, 2]
+Spécifie la puissance utilisée pour la métrique Minkowski. Par exemple, p=1 correspond à la distance de Manhattan, et p=2 correspond à la distance euclidienne.
+
+'metric': 'minkowski', 'n_neighbors': 10, 'p': 1, 'weights': 'distance'
 
 #### SGDClassifier
 
 #### LogisticRegression
+
+    'penalty': ['l1', 'l2'],
+    'C': [0.01, 0.1, 1, 10],
+    'class_weight': [None, 'balanced'],
+    'solver': ['liblinear', 'lbfgs']
 
 #### GaussianNB
 
