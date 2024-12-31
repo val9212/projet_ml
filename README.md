@@ -108,7 +108,7 @@ Avant de valider, nous allons réaliser une vérification du temps d'exécution 
 
 ![graphe représentant le temps d'entrainement des modèles](/Visualisation/entrainement.png)
 
-Ce graphique nous permet de constater que les modèles prennent tous en moyenne le même temps pour s'entraîner sur les données. Les modèles KNeighborsClassifier et GaussianNB sont les plus rapides.
+Ce graphique nous permet de constater que les modèles prennent tous, en moyenne, le même temps pour s'entraîner sur les données. Les modèles KNeighborsClassifier et GaussianNB sont les plus rapides.
 
 ![graphe représentant le temps de test des modèles](/Visualisation/test.png)
 
@@ -124,7 +124,7 @@ sous forme de liste Python. Chaque élément de cette liste correspond à une no
 un identifiant unique pour chaque séquence. La target `phrase_end` est une colonne booléenne : elle indique si une note correspond à une fin de phrase (True) ou non (False).
 
 En examinant les données, nous avons aussi constaté que certaines features étaient associées aux lyrics des séquences musicales. Ces features sont: `lyrics`, `noncontentword`, `wordend`, 
-`phoneme`, `rhymes`, `rhymescontentwords`, `wordstress` et `melismastate`. Ces features ont plus de 50 % de leur valeur qui sont manquantes, ce qui ne nous permet de les utiliser. 
+`phoneme`, `rhymes`, `rhymescontentwords`, `wordstress` et `melismastate`. Ces features ont plus de 50 % de leur valeur qui sont manquantes, ce qui ne nous permet pas de les utiliser. 
 Nous avons donc choisi de les retirer. Il nous reste donc 52 features.
 
 Certaines autres features présentent des valeurs `None` pour certaines notes. Par exemple, la colonne `diatonicinterval` contient tout le temps une valeur 
@@ -137,7 +137,7 @@ Nous avons réalisé un graphique pour voir la variabilité des tailles de séqu
 
 ![graphe representant la taille des sequences](/Visualisation/graphe_tailles_seqs.png)
 
-Nous avons pour finir classifié les features qu'ils nous restaient en 4 catégories :
+Enfin, nous avons classifié les features qu'ils nous restaient en 4 catégories :
 
 - **numérique** : 'scaledegree', 'imaweigth', 'pitch40', 'midipitch', 'diatonicpitch', 'diatonicinterval', 'chromaticinterval', 'pitchproximity', 'pitchreversal', 'duration', 'onsettick', 'phrasepos', 'phrase_ix', 'songpos', 'IOI', 'IOR', 'beatstrength', 'beat_str', 'beat', 'timesignature', 'gpr2a_Frankland', 'gpr2b_Frankland', 'gpr3a_Frankland', 'gpr3d_Frankland', 'gpr_Frankland_sum', 'lbdm_spitch', 'lbdm_sioi', 'lbdm_srest', 'lbdm_rpitch', 'lbdm_rioi', 'lbdm_rrest', 'lbdm_boundarystrength'
 - **catégorielle** : 'scaledegreespecifier', 'tonic', 'mode', 'metriccontour', 'nextisrest', 'duration_fullname', 'imacontour', 'pitch', 'contour3', 'contour5', 'durationcontour'
@@ -148,7 +148,7 @@ Les colonnes sous forme de fractions ont été reformattées en valeurs numériq
 
 ### 2) créations de sous-séquences et préparation des données : 
 
-Le jeu de données contient 18108 séquences, afin de trouver les fins de phrases dedans, nous allons les diviser en sous-séquences plus petites.
+Le jeu de données contient 18108 séquences. Afin de trouver les fins de phrases, nous allons diviser chaque séquence en sous-séquences plus petites.
 
 Le script de création de sous-séquences parcours toutes les listes du jeu de données, et les divise en listes plus petites de tailles que nous pouvons choisir.
 Les séquences ayant toutes des tailles différentes, nous faisons attention à ce que les dernières sous-séquences ne soient pas tronquées.
@@ -230,12 +230,12 @@ Les modèles ont tendance à classer la majorité des sous-séquences comme n'é
 
 *Matrice de confusion pour le RandomForestClassifier avec les données d'entrainement équilibrées*
 
-On constate une réduction du nombre de faux positifs (3021 < 8916). Mais une augmentation du nombre de faux négatifs (29423 > 8093). Il y a aussi une réduction du nombre de vrais négatifs, les vrais positifs eux ont augmenté. Nous constatons la meme chose sur tous les modèles. (résultats complet: `/model_test/results/arbitraire/equilibre`) 
+On constate une réduction du nombre de faux positifs (3021 < 8916),  mais une augmentation du nombre de faux négatifs (29423 > 8093). Il y a aussi une réduction du nombre de vrais négatifs, les vrais positifs eux ont augmenté. Nous constatons la meme chose sur tous les modèles. (résultats complet: `/model_test/results/arbitraire/equilibre`) 
 
 Pour améliorer nos résultats, nous avons exploré une autre méthode plus précise pour la sélection des features : l'analyse de corrélation.
 
 #### b) Matrice de corrélations (correlation/global et correlation/numérique):
-L'utilisation de quatre features choisit arbitrairement a montré des limites. Nous avons décidé d'utiliser des matrices de corrélation pour identifier les features les plus significatives.
+L'utilisation de quatre features choisies arbitrairement a montré des limites. Nous avons décidé d'utiliser des matrices de corrélation pour identifier les features les plus significatives.
 Ces matrices permettent d’évaluer les relations linéaires entre les features et la cible, en calculant le coefficient de corrélation de Pearson. 
 Elles permettent également d’identifier les features fortement corrélées entre elles, ce qui nous permet d'éviter les informations redondantes. Ainsi, cette approche a permis de sélectionner les variables pertinentes, simplifiant le modèle et améliorant ses performances.
 
@@ -273,7 +273,7 @@ En constatant une amélioration (augmentation d'environ 20% sur le f1 score), no
 
 Malgré le changement de features, le score pour GaussianNB reste faible comparé aux autres modèles. En regardant sa matrice de confusion, on constate que le modèle a tendance à mal classer les fins de phrases, en les catégorisant comme n'étant pas des fins de phrases. (résultats complet: `/model_test/results/correlation`)
 
-Pour finir, nous avons testé sur le modèle RandomForestClassifier, l'ajout des features catégorielles. Nous avons constaté que le f1-score diminuait, et que le modèle avait tendance à mal classer les fins de phrases. De ce fait, nous n'allons pas ajouter de features catégorielles dans nos features sélectionnées.
+Pour finir, nous avons testé sur le modèle RandomForestClassifier l'ajout des features catégorielles. Nous avons constaté que le f1-score diminuait, et que le modèle avait tendance à mal classer les fins de phrases. De ce fait, nous n'allons pas ajouter de features catégorielles dans nos features sélectionnées.
 Cette baisse de ce score après l'ajout de ces features peut s'expliquer par l'augmentation de la complexité des données due au OneHotEncoder qui crée une colonne par valeur unique présente dans la feature.
 
 Nous devons désormais vérifier l'impact de la taille de nos sous-séquences sur les modèles.
@@ -292,8 +292,8 @@ Nous obtenons donc les résultats suivants:
 
 ![graphe des scores de chaque modèle en fonction des différentes tailles de sous-séquences](/size/model_size.png)
 
-Ce graphique nous permet de constater que de manieres generales, les performances des modeles on tendances a diminuer lorsque la taille des sous-séquences augmente.
-Cependant tout les modeles ne sont pas autant impacté.
+Ce graphique nous permet de constater que de manière générale, les performances des modeles on tendances à diminuer lorsque la taille des sous-séquences augmente.
+Cependant tout les modeles ne sont pas autant impactés.
 
 - RandomForestClassifier: Le modèle reste stable malgré le changement de la taille des sous-séquences, avec des scores constamment élevés et une faible variation. Il semble bien adapté à toutes les tailles de sous-séquences.
 - DecisionTreeClassifier: Le modèle réagit de manière similaire au RandomForestClassifier. Il a un score légèrement plus faible et une petite baisse pour les grandes tailles de sous-séquences.
@@ -302,8 +302,8 @@ Cependant tout les modeles ne sont pas autant impacté.
 - LogisticRegression: Le modèle est stable pour les petites tailles de sous-séquences, mais ses performances diminuent légèrement avec l'augmentation de la taille des sous-séquences.
 - GaussianNB: Le modèle est très dépendant de la taille des sous-séquences. Les scores chutent fortement dès que la taille des sous-séquences augmente.
 
-Les modeles etant plus performant sur des petites tailles de sous séquences, nous allons selectionner une taille de sous séquences de 4.
-Nous ne choissisons pas de generer des sous sequences de taille de 2 avec un decallage de 1, car cela reviendrait a generer toutes les sous séquences possibles. Ce qui genere beacoup de redondance dans les données.
+Les modeles étant plus performants sur des petites tailles de sous séquences, nous allons selectionner une taille de sous séquences de 4.
+Nous ne choissisons pas de generer des sous sequences de taille de 2 avec un decallage de 1, car cela reviendrait a generer toutes les sous séquences possibles, ce qui générerait beacoup de redondance dans les données.
 
 ### 6) Choix des hyperparamètres des modèles
 
