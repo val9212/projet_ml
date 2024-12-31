@@ -106,11 +106,11 @@ Pour réaliser se projet, nous allons nous limiter au test d'un nombre limité d
 
 Avant de valider, nous allons réaliser une vérification du temps d'exécution de l'entraînement et du test de ces derniers.
 
-![graphe représentant le temps d'entrainement des modèles](/Visualisation/entrainement.png)
+![graphe représentant le temps d'entrainement des modèles](/Visualisation/time_training.png)
 
 Ce graphique nous permet de constater que les modèles prennent tous, en moyenne, le même temps pour s'entraîner sur les données. Les modèles KNeighborsClassifier et GaussianNB sont les plus rapides.
 
-![graphe représentant le temps de test des modèles](/Visualisation/test.png)
+![graphe représentant le temps de test des modèles](/Visualisation/time_test.png)
 
 Ce graphique nous permet de constater que le modèle SVC prend beaucoup plus de temps à exécuter le test. Nous pouvons l'expliquer, car il a une complexité de O(n³).
 Afin d'éviter des temps d'exécution trop longs, nous n'allons donc pas le garder pour la suite de nos tests.
@@ -255,9 +255,9 @@ Nous avons aussi identifié d'autres features avec des corrélations élevées, 
 
 Nous avons continué cette même démarche d'analyse de matrice de corrélations jusqu'à obtenir une matrice de correlation simplifiée.
 
-![matrice de corrélation final](/correlation/corr_final.svg)
+![matrice de corrélation final](/correlation/results/corr_final.svg)
 
-Nous sélectionnons les attributs présents dans cette matrice : "duration", "beatinphrase", "restduration_frac", "beatinphrase_end", "IOI", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", "imaweight"
+Nous sélectionnons les attributs présents dans cette matrice : "duration", "beatinphrase", "restduration_frac", "beatinphrase_end", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", "imaweight"
 
 Dans un premier temps, nous le testons uniquement sur le RandomsForestClassifier, afin de verifier qu'il y ait bien une amélioration des résultats par rapport a la sélection arbitraire.
 
@@ -372,7 +372,29 @@ Spécifie la puissance utilisée pour la métrique Minkowski. Par exemple, p=1 c
 
 ## Programme et scripts
 
-### model_test
+Pour réaliser ce projet, différents scripts Python ont été réalisés, ils ont été rangés dans différents dossiers, en suivant l'arborescence suivante.
+
+    ├───correlation             # Contient les scripts pour réaliser les matrices de correlations
+    │   └───results             # Contient les matrices de corrélations
+    ├───hyperparametres         # Contient tous les notebooks permettant de rechercher les meilleurs hyperparamètres pour chaque modèle
+    ├───model_test              # Contient les scripts pour tester les modèles
+    │   └───results             # Contient tous les résultats des tests réalisés
+    │      ├───arbitraire       # Contient les résultats des tests des modèles avec le choix des features arbitraires
+    │      │   └───equilibre    # Contient les résultats des tests des modèles avec le choix des features arbitraires équilibrés
+    │      └───correlation      # Contient les résultats des tests des modèles avec le choix des features par corrélation
+    ├───size                    # Contient le notebook permettant de tester les différentes tailles 
+    └───visualisation           # Contient le notebook de visualisation des données
+
+### Corrélation
+
+Pour réaliser nos matrices de corrélation, nous avons créé deux scripts python.
+
+- global.py: Ce script permet de réaliser la matrice de correlation global.
+- numerique.py: Ce script contient une fonction permettant de créer des matrices de corrélation en sélectionnant les colonnes que nous souhaitons garder.
+
+Les résultats de ses scripts sont placés dans le dossier `results`
+
+### modele_test
 
 Pour entraîner les modèles de manière automatique, nous avons développé un programme Python. 
 
@@ -390,9 +412,12 @@ Ce programme est composé de 3 fichiers pour fonctionner :
 - un fichier main : qui permet d'exécuter le programme.
 - un fichier data_processing : qui contient la classe DataProcessor, qui contient toutes les méthodes qui permettent de préparer les données
 
-### correlation
-
 ### size 
+
+Pour réaliser nos tests sur les tailles de sous-séquences, nous avons réalisé un notebook.
+
+- model_test_size.ipynb: Ce notebook permet de réaliser une validation croisée sur différentes tailles de sous-séquences et sur différents modèles. Il nous donne un graphe d'évolution de la performance des modèles en fonction de la taille des sous-séquences.
+- model_size.png: la figure des résultats.
 
 ### hyperparametres
 
