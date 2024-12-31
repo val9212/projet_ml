@@ -141,25 +141,25 @@ def generate_correlation_matrix(data, save_path, label_column="phrase_end"):
 
 
 # Génération: Matrice 1
-generate_correlation_matrix(data_num, "num_corr1.svg")
+generate_correlation_matrix(data_num, "results/num_corr1.svg")
 print("matrice 1 générée")
 
 # Génération: Matrice 2
 columns_no_frac = ['duration_frac', 'beatfraction', 'IOI_frac', 'beat_fraction_str', 'IOR_frac'] # Colones retirées
 data_num2 = data_num[[col for col in data_num.columns if col not in columns_no_frac]]
-generate_correlation_matrix(data_num2, "num_corr2.svg")
+generate_correlation_matrix(data_num2, "results/num_corr2.svg")
 print("matrice 2 générée")
 
 # Génération: Matrice 3
 columns_to_remove_3 = ["diatonicinterval", "midipitch", "beat_str"] # Colones retirées
 data_num3 = data_num2[[col for col in data_num2.columns if col not in columns_to_remove_3]]
-generate_correlation_matrix(data_num3, "num_corr3.svg")
+generate_correlation_matrix(data_num3, "results/num_corr3.svg")
 print("matrice 3 générée")
 
 # Génération: Matrice 4
 columns_to_remove_4 = ["beat", "diatonicpitch", "IOR", "lbdm_sioi"] # Colones retirées
 data_num4 = data_num3[[col for col in data_num3.columns if col not in columns_to_remove_4]]
-generate_correlation_matrix(data_num4, "num_corr4.svg")
+generate_correlation_matrix(data_num4, "results/num_corr4.svg")
 print("matrice 4 générée")
 
 # Génération: Matrice 5
@@ -167,5 +167,5 @@ final_columns = ["phrase_end", "duration", "beatinphrase", 'restduration_frac', 
                 "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest",
                  "lbdm_boundarystrength", "pitch40", 'imaweight'] # Colones sélectionnées
 data_numf = data_num4[[col for col in data_num4.columns if col in final_columns]]
-generate_correlation_matrix(data_numf, "corr_final.svg")
+generate_correlation_matrix(data_numf, "results/corr_final.svg")
 print("matrice 5 générée")
