@@ -12,7 +12,7 @@ from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt
 
 
-def main():
+def main(window_size, models):
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -21,7 +21,6 @@ def main():
     logger = logging.getLogger("Main")
 
     dataset_path = "MTC-FS-INST-2.0"
-    window_size = 8
     data_processor = DataProcessor(dataset_path, window_size=window_size)
     data_processor.clean_data()
     data_processor.create_subsequences()
@@ -33,16 +32,6 @@ def main():
         labels=data_processor.labels,
         ids=data_processor.ids,
     )
-
-    # Add models to train
-    models = [
-        (KNeighborsClassifier(), "KNeighborsClassifier"),
-        (DecisionTreeClassifier(), "DecisionTreeClassifier"),
-        (SGDClassifier(), "SGDClassifier"),
-        (LogisticRegression(), "LogisticRegression"),
-        (GaussianNB(), "GaussianNB"),
-        (RandomForestClassifier(),"RandomForestClassifier",),
-    ]
 
     for model, name in models:
         model_trainer.add_model(model, name)
@@ -79,4 +68,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    size = 4
+    models = [
+        (KNeighborsClassifier(), "KNeighborsClassifier"),
+        (DecisionTreeClassifier(), "DecisionTreeClassifier"),
+        (SGDClassifier(), "SGDClassifier"),
+        (LogisticRegression(), "LogisticRegression"),
+        (GaussianNB(), "GaussianNB"),
+        (RandomForestClassifier(),"RandomForestClassifier",),
+    ]
+    main(size, models)

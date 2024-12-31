@@ -10,12 +10,9 @@ import matplotlib.pyplot as plt
 
 
 
-def main():
+def main(window_size, step, selected_columns, models):
     dataset_path = "MTC-FS-INST-2.0"
-    window_size = 4
-    step = 2
     numerical_columns = [ 'scaledegree', 'imaweigth', 'pitch40', 'midipitch', 'diatonicpitch', 'diatonicinterval', 'chromaticinterval', 'pitchproximity', 'pitchreversal', 'duration', 'onsettick', 'phrasepos', 'phrase_ix', 'songpos', 'IOI', 'IOR', 'beatstrength', 'beat_str', 'beat', 'timesignature', 'gpr2a_Frankland', 'gpr2b_Frankland', 'gpr3a_Frankland', 'gpr3d_Frankland', 'gpr_Frankland_sum', 'lbdm_spitch', 'lbdm_sioi', 'lbdm_srest', 'lbdm_rpitch', 'lbdm_rioi', 'lbdm_rrest', 'lbdm_boundarystrength']
-    selected_columns = ["duration", "beatinphrase", 'restduration_frac', "beatinphrase_end", "IOI", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", 'imaweight']
     data_processor = DataProcessor(dataset_path, numerical_columns, selected_columns, window_size, step)
     data_processor.clean_data()
     data_processor.create_subsequences()
@@ -27,17 +24,6 @@ def main():
         labels=data_processor.labels,
         ids=data_processor.ids,
     )
-
-    # Add models to train
-    models = [
-        (KNeighborsClassifier(), "KNeighborsClassifier"),
-        (DecisionTreeClassifier(), "DecisionTreeClassifier"),
-        (SGDClassifier(), "SGDClassifier"),
-        (LogisticRegression(), "LogisticRegression"),
-        (GaussianNB(), "GaussianNB"),
-        (RandomForestClassifier(),"RandomForestClassifier",),
-        #(SVC(), "SVC")
-    ]
 
     for model, name in models:
         model_trainer.add_model(model, name)
@@ -74,4 +60,16 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    size = 4
+    step = 2
+    selected_columns = ["duration", "beatinphrase", 'restduration_frac', "beatinphrase_end", "IOI", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", 'imaweight']
+    models = [
+        (KNeighborsClassifier(), "KNeighborsClassifier"),
+        (DecisionTreeClassifier(), "DecisionTreeClassifier"),
+        (SGDClassifier(), "SGDClassifier"),
+        (LogisticRegression(), "LogisticRegression"),
+        (GaussianNB(), "GaussianNB"),
+        (RandomForestClassifier(),"RandomForestClassifier",),
+        #(SVC(), "SVC")
+    ]
+    main(size, step, selected_columns, models)

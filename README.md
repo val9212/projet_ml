@@ -112,7 +112,7 @@ Ce graphique nous permet de constater que les modèles prennent tous en moyenne 
 
 ![graphe représentant le temps de test des modèles](/Visualisation/test.png)
 
-Ce graphique nous permet de constater que le modèle SVC prend beaucoup plus de temps à exécuter le test. Nous pouvons l'expliquer, car il a une complexité de O(n²).
+Ce graphique nous permet de constater que le modèle SVC prend beaucoup plus de temps à exécuter le test. Nous pouvons l'expliquer, car il a une complexité de O(n³).
 Afin d'éviter des temps d'exécution trop longs, nous n'allons donc pas le garder pour la suite de nos tests.
 
 ## METHODOLOGIE : 
@@ -146,7 +146,7 @@ Nous avons pour finir classifié les features qu'ils nous restaient en 4 catégo
 
 Les colonnes sous forme de fractions ont été reformattées en valeurs numériques et les colones catégorielles ont été encodées avec la méthode OneHotEncoder.
 
-### 2) créations de sous séquences et préparation des données : 
+### 2) créations de sous-séquences et préparation des données : 
 
 Le jeu de données contient 18108 séquences, afin de trouver les fins de phrases dedans, nous allons les diviser en sous-séquences plus petites.
 
@@ -179,28 +179,7 @@ Enfin, le tableau étendu est divisé en deux parties : un jeu d’entraînement
 
 Certains modèles n'étant pas capables d'interpréter les valeurs manquantes, nous remplaçons ces dernières par des 0.
 
-### 4) Fonctionnement du programme
-
-Pour entraîner les modèles de manière automatique, nous avons développé un programme Python. 
-
-Ce programme Python est capable de préparer les données de notre jeu de données, et de tester différents modèles prédéfinis.
-Pour fonctionner, nous devons définir: 
-- size : la taille des sous-séquences
-- step : le décalage entre chaque sous-séquence
-- selected_columns : les colonnes sélectionnées
-- models : la liste de modèles à tester 
-
-Le programme affiche les rapports de classifications, les matrices de confusions et il crée et enregistre pour chaque modèle la matrice de confusions et la courbe ROC.
-Pour finir, il crée une figure de comparaison des f1 scores (macro average) pour analyser les différences de performances globales des modèles.
-
-Ce programme est composé de 3 fichiers pour fonctionner :
-- un fichier main : qui permet d'exécuter le programme.
-- un fichier data_processing : qui contient la classe DataProcessor, qui contient toutes les méthodes qui permettent de préparer les données
-
-
-
-
-### 5) Choix des features:
+### 4) Choix des features:
 
 Pour permettre au modèle de prédire correctement les fins de phrases, nous devons lui fournir les données qui lui sont utiles. Cependant, il n'est pas simple de savoir
 quelles sont les features utiles pour prédire une fin de phrase en se basant uniquement sur leur description. Afin de répondre à cette problématique, nous avons testé deux approches.
@@ -219,10 +198,10 @@ Nous avons choisi comme taille pour nos sous-séquences de quatre avec un décal
 
 *Matrice de confusion pour le RandomForestClassifier.*
 
-Vrais positifs : 10575 occurrences qui correspondent aux sous-séquences prédites comme des fins de phrases par le modèle et en étant des fins de phrase.
-Vrais négatifs : 180971 occurrences qui correspondent aux sous-séquences prédites comme n'étant pas des fins de phrases par le modèle et qui ne sont pas des fins de phrases. 
-Faux positifs : 8916 occurrences qui correspondent aux sous-séquences prédites comme des fins de phrases par le modèle et mais qui ne le sont pas.
-Faux Négatifs : 8093 occurrences qui correspondent aux sous-séquences prédites comme n'étant pas des fins de phrases mais qui le sont vraiment.
+- Vrais positifs : 10575 occurrences qui correspondent aux sous-séquences prédites comme des fins de phrases par le modèle et en étant des fins de phrase.
+- Vrais négatifs : 180971 occurrences qui correspondent aux sous-séquences prédites comme n'étant pas des fins de phrases par le modèle et qui ne sont pas des fins de phrases. 
+- Faux positifs : 8916 occurrences qui correspondent aux sous-séquences prédites comme des fins de phrases par le modèle et mais qui ne le sont pas.
+- Faux Négatifs : 8093 occurrences qui correspondent aux sous-séquences prédites comme n'étant pas des fins de phrases mais qui le sont vraiment.
 
 On constate donc que le modèle est bien capable de prédire les séquences de la classe majoritaire (vrais négatif). Le modèle a cependant des difficultés à identifier les fins de phrases (Vrais positifs).
 
@@ -231,13 +210,13 @@ ne sont pas des fins de phrase que de sous-séquences qui sont des fins de phras
 
 À cause de ce déséquilibre, nous ne pouvons pas nous baser sur le f1 score du modèle en "weigthed average", meme si ce score est meilleur que le "macro average". Il ne serait pas pertinent de l'utiliser car, il privilégie la classe majoritaire. 
 
-Nous utilisons donc le f1 score macro average, qui est mieux adapté pour comparer les performances globales
-Le f1 score combine les mesures de rappel et de précision, offrant une évaluation des performances du modèle.
+Nous utilisons donc le f1 score macro average, qui est mieux adapté pour comparer les performances globales.
+Le f1 score combine les mesures de rappel et de précision, donnant une évaluation des performances du modèle.
 
 Le fichier `results/arbitraire/rsultats.txt` présente les résultats détaillés des rapports de classification.
 
 ![graphe montrant les f1 score "macro average" des modèles](/model_test/results/arbitraire/models_f1_scores_visualization.png)
-Ce graphe nous permet de constater qu'avec les paramètres par défaut, le modèle RandomForestClassifier est le meilleur, avec un f1 score de 0,79. Le modèle avec le moins bon f1 score (0,65) est le SGDClassifier. (résultats complet: `/model_test/results/arbitraire`)
+Ce graphe nous permet de constater qu'avec les paramètres par défaut, le modèle RandomForestClassifier est le meilleur, avec un f1 score de 0,79. Le modèle avec le moins bon f1 score (0,65) est le SGDClassifier.
 
 Pour améliorer ces scores, nous pouvons essayer d'équilibrer nos données d'entraînement, pour voir si cela permet de réduire l'impact du déséquilibre.
 Pour ce faire, nous prenons autant de sous-séquences qui sont des fins de phrase que de séquences qui ne le sont pas, nos données de test restent inchangées.
@@ -245,13 +224,13 @@ Pour ce faire, nous prenons autant de sous-séquences qui sont des fins de phras
 ![graphe montrant les f1 score "macro average" des modèles avec les données d'entrainement équilibrées](/model_test/results/arbitraire/models_f1_scores_balanced.png)
 
 L'équilibrage des données d'entraînement n'a pas permis d'améliorer les résultats, pour la majorité des modèles, il réduit même les scores. On peut l'expliquer par l'augmentation du déséquilibre.
-Les modèles ont tendance à classer la majorité des sous-séquences comme n'étant pas des fins de phrases. (
+Les modèles ont tendance à classer la majorité des sous-séquences comme n'étant pas des fins de phrases. 
 
-![Matrice de confusion pour le RandomForestClassifier avec les données d'entrainement équilibrées](/model_test/results/arbitraire/equilibre/confusion_matrix_2RandomForestClassifier.png)
+![Matrice de confusion pour le RandomForestClassifier avec les données d'entrainement équilibrées](/model_test/results/arbitraire/equilibre/confusion_matrix_RandomForestClassifier.png)
 
 *Matrice de confusion pour le RandomForestClassifier avec les données d'entrainement équilibrées*
 
-On constate une réduction du nombre de faux positifs (1541 < 8916). Mais une augmentation du nombre de faux négatifs (14081 > 8093). Il y a aussi une réduction du nombre de vrais négatifs, les vrais positifs eux n'ont quasiment pas changé. (résultats complet: `/model_test/results/arbitraire/equilibre`) 
+On constate une réduction du nombre de faux positifs (3021 < 8916). Mais une augmentation du nombre de faux négatifs (29423 > 8093). Il y a aussi une réduction du nombre de vrais négatifs, les vrais positifs eux ont augmenté. Nous constatons la meme chose sur tous les modèles. (résultats complet: `/model_test/results/arbitraire/equilibre`) 
 
 Pour améliorer nos résultats, nous avons exploré une autre méthode plus précise pour la sélection des features : l'analyse de corrélation.
 
@@ -297,21 +276,75 @@ Malgré le changement de features, le score pour GaussianNB reste faible compar�
 Pour finir, nous avons testé sur le modèle RandomForestClassifier, l'ajout des features catégorielles. Nous avons constaté que le f1-score diminuait, et que le modèle avait tendance à mal classer les fins de phrases. De ce fait, nous n'allons pas ajouter de features catégorielles dans nos features sélectionnées.
 Cette baisse de ce score après l'ajout de ces features peut s'expliquer par l'augmentation de la complexité des données due au OneHotEncoder qui crée une colonne par valeur unique présente dans la feature.
 
-### 6) choix de la taille des sous sequences
+Nous devons désormais vérifier l'impact de la taille de nos sous-séquences sur les modèles.
 
-### 7) Choix des hyperparamètres des modèles
+### 5) choix de la taille des sous-séquences
 
-####
+Maintenant que nous avons choisi les features que nous souhaitons tester, il nous reste à vérifier l'impact des sous-séquences sur nos modèles.
 
-####
+Pour cette partie, nous allons travailler sur un échantillon de notre jeu de données sélectionné aléatoirement. L'échantillon représente un quart du jeu de données complet.
 
-####
+Pour vérifier nos données, nous allons réaliser une validation croisée, et vérifier la moyenne des scores sortis, en faisant varier la taille des sous-séquences.
+Nous testons les tailles : 2, 4, 6, 8, 10, 12
+Le décalage entre chaque sous-séquence correspond à la moitié de la taille.
 
-####
+Nous obtenons donc les résultats suivants:
 
-####
+![graphe des scores de chaque modèle en fonction des différentes tailles de sous-séquences](/size/model_size.png)
 
-####
+Ce graphique nous permet de constater que de manieres generales, les performances des modeles on tendances a diminuer lorsque la taille des sous-séquences augmente.
+Cependant tout les modeles ne sont pas autant impacté.
 
-### 6) Résultats finaux et Discussion
+- RandomForestClassifier: Le modèle reste stable malgré le changement de la taille des sous-séquences, avec des scores constamment élevés et une faible variation. Il semble bien adapté à toutes les tailles de sous-séquences.
+- DecisionTreeClassifier: Le modèle réagit de manière similaire au RandomForestClassifier. Il a un score légèrement plus faible et une petite baisse pour les grandes tailles de sous-séquences.
+- KNeighborsClassifier: Le modèle montre une baisse progressive de performance quand la taille des sous-séquences augmente. Il est performant sur les petites tailles de sous-séquences, moins sur les grades tailles.
+- SGDClassifier: Le modèle est très instable, il y a de fortes variations en fonction de la taille des sous-séquences. 
+- LogisticRegression: Le modèle est stable pour les petites tailles de sous-séquences, mais ses performances diminuent légèrement avec l'augmentation de la taille des sous-séquences.
+- GaussianNB: Le modèle est très dépendant de la taille des sous-séquences. Les scores chutent fortement dès que la taille des sous-séquences augmente.
+
+Les modeles etant plus performant sur des petites tailles de sous séquences, nous allons selectionner une taille de sous séquences de 4.
+Nous ne choissisons pas de generer des sous sequences de taille de 2 avec un decallage de 1, car cela reviendrait a generer toutes les sous séquences possibles. Ce qui genere beacoup de redondance dans les données.
+
+### 6) Choix des hyperparamètres des modèles
+
+#### RandomForestClassifier
+
+#### DecisionTreeClassifier
+
+#### KNeighborsClassifier
+
+#### SGDClassifier
+
+#### LogisticRegression
+
+#### GaussianNB
+
+### 7) Résultats finaux et Discussion
+
+## Programme et scripts
+
+### model_test
+
+Pour entraîner les modèles de manière automatique, nous avons développé un programme Python. 
+
+Ce programme Python est capable de préparer les données de notre jeu de données, et de tester différents modèles prédéfinis.
+Pour fonctionner, nous devons définir: 
+- size : la taille des sous-séquences
+- step : le décalage entre chaque sous-séquence
+- selected_columns : les colonnes sélectionnées
+- models : la liste de modèles à tester 
+
+Le programme affiche les rapports de classifications, les matrices de confusions et il crée et enregistre pour chaque modèle la matrice de confusions et la courbe ROC.
+Pour finir, il crée une figure de comparaison des f1 scores (macro average) pour analyser les différences de performances globales des modèles.
+
+Ce programme est composé de 3 fichiers pour fonctionner :
+- un fichier main : qui permet d'exécuter le programme.
+- un fichier data_processing : qui contient la classe DataProcessor, qui contient toutes les méthodes qui permettent de préparer les données
+
+### correlation
+
+### size 
+
+### hyperparametres
+
 

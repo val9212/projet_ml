@@ -36,7 +36,7 @@ class ModelTrainer:
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             self.features,
             self.labels,
-            test_size=0.2,
+            test_size=1/3,
             random_state=42,
             stratify=self.labels
         )
@@ -117,6 +117,6 @@ class ModelTrainer:
         print("Confusion Matrix:")
         print(cm)
         ConfusionMatrixDisplay(cm).plot()
-        plt.savefig(f"confusion_matrix_2{name}.png")
+        plt.savefig(f"confusion_matrix_{name}.png")
         RocCurveDisplay.from_estimator(model, self.X_test, self.y_test)
         plt.show()
