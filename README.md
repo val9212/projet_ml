@@ -292,8 +292,6 @@ Nous obtenons donc les résultats suivants:
 
 ![graphe des scores de chaque modèle en fonction des différentes tailles de sous-séquences](/size/model_size.png)
 
-Ce graphique nous permet de constater que de manière générale, les performances des modeles on tendances à diminuer lorsque la taille des sous-séquences augmente.
-Cependant tout les modeles ne sont pas autant impactés.
 Ce graphique nous permet de constater que de manière générale, les performances des modèles ont tendance à diminuer lorsque la taille des sous-séquences augmente.
 Cependant tous les modèles ne sont pas autant impactés.
 
