@@ -407,13 +407,13 @@ Pour le modèle GausianNB, les résultats restent similaires, même avec la conf
 Pour le modèle RandomForestClassifier, les résultats restent similaires, même avec la configuration des hyperparamètres.
 
 D'après nos résultats, le modèle RandomForestClassifier est le meilleur, suivi du DecisionTreeClassifier. Les modèles basés sur des arbres de précision sont les plus performants pour réaliser une classification entre deux classes, dont une majoritaire et une minoritaire.
-[Matrice de confusion finale RandomForestClassifier](/model_test/results/final/confusion_matrix_RandomForestClassifier.png)
+![Matrice de confusion finale RandomForestClassifier](/model_test/results/final/confusion_matrix_RandomForestClassifier.png)
 
 *Matrice de confusion finale RandomForestClassifier* 
 
 La répartition de la matrice de confusion est correcte, même si le modèle a un peu plus de mal à gérer les faux positifs.
 
-[Courbe ROC RandomForestClassfier](/model_test/results/final/roc_curve_RandomForestClassifier.png)
+![Courbe ROC RandomForestClassfier](/model_test/results/final/roc_curve_RandomForestClassifier.png)
 
 La courbe ROC du modèle indique une performance quasiment optimale, cela s'explique par la présence du déséquilibre entre les classes.
 Cependant, elle peut aussi indiquer que le modèle surprend nos données, pour vérifier ça, nous pouvons réaliser une validation croisée.
