@@ -25,84 +25,84 @@ Les champs de métadonnées sont :
 - **tunefamily_full** `(string)`: Nom complet de la famille mélodique.
 - **freemeter** `(bool)`: Indique si la mélodie a une structure rythmique (True / False).
 - **ann_bgcorpus** `(bool)`: Spécifie si la mélodie est indépendante des chansons d'un autre corpus, en l'occurrence MTC-ANN-2.0.1 (True / False).
-- **origin** `(string)`: Indique le chemin du fichier kern dans la collection ESSEN. Ce chemin renseigne aussi sur l'origine géographique de la mélodie.
+- **origin** `(string)`: Indique le chemin du fichier kern dans la collection ESSEN.
 
 Les séquences caractéristiques correspondent aux séquences de notes dans une mélodie donnée. Elles renseignent sur les 61 caractéristiques distinctes: 
 
-- **pitch** `(string)` : Représentation de la hauteur de la note selon le format de music21.
-- **midipitch** `(int)` : Numéro MIDI représentant la hauteur de la note (de 0 à 108).
-- **pitch40** `(int)` : Représentation de la hauteur en base 40.
-- **contour3** `(string)` : Contour de la hauteur par rapport à la note précédente ('-' : Descendante, '=' : Égale, '+' : Montante, la première note a une valeur None).
-- **contour5** `(string)` : Contour détaillé de la hauteur par rapport à la note précédente ('--' : Descente d’au moins 3 intervalles MIDI, '-' : Descente normale, '=' : Égale, '+' : Ascension normale, '++' : Ascension d’au moins 3 intervalles MIDI, la première note a une valeur None).
-- **diatonicinterval** `(int)` : Intervalle diatonique entre la note actuelle et la précédente (en degrés d’échelle, la première note a une valeur None).
-- **chromaticinterval** `(int)` : Intervalle chromatique (différence midipitch) entre la note actuelle et la précédente (La première note a une valeur None).
-- **tonic** `(string)` : Classe de hauteur de la tonique pour la note actuelle (A à G avec altérations).
-- **mode** `(string)` : Mode de la note.
-- **scaledegree** `(int)` : Degré de la hauteur par rapport à l’échelle de la tonique (de 1 à 7).
-- **scaledegreespecifier** `(string)` : Spécification du degré.
-- **diatonicpitch** `(int)` : Hauteur diatonique de la note.
-- **timesignature** `(Fraction)` : Signature rythmique de la note, sous forme d’une fraction (Si aucune signature n’est notée, la valeur est None).
-- **beatstrength** `(float)` : Force métrique (entre 0.0 et 1.0) du temps d’apparition de la note (music21).
-- **metriccontour** `(string)` : Contour de la force métrique par rapport à la note précédente ('-' : Plus faible, '=' : Égale, '+' : Plus forte).
-- **imaweight** `(float)` : Poids métrique (entre 0.0 et 1.0) calculé par l’Analyse Métrique Interne.
-- **imacontour** `(string)` : Contour de poids métrique par rapport à la note précédente ('-' : Plus faible, '=' : Égale, '+' : Plus fort)
-- **duration** `(float)` : Durée de la note.
-- **duration_frac** `(Fraction)` : Durée de la note sous forme de fraction.
-- **duration_fullname** `(string)` : Nom complet de la durée de la note (music21).
-- **durationcontour** `(string)` : Contour de la durée par rapport à la note précédente ('-' : Plus courte, '=' : Égale, '+' : Plus longue, la première note a None).
-- **IOI** `(float)` : Intervalle de temps entre l'apparition de la note et celle de la note suivante (exprimé en unité de noire, la dernière note a None sauf si un silence suit).
-- **IOI_frac** `(Fraction)` : Intervalle IOI représenté sous forme de fraction.
-- **IOR** `(float)` : Ratio entre l'IOI de la note actuelle et celui de la note précédente (La première note a None).
-- **IOR_frac** `(Fraction)` : Ratio IOR exprimé sous forme de fraction.
-- **onsettick** `(int)` : Temps d'apparition de la note en ticks MIDI (le premier tick est 0).
-- **beatfraction** `(Fraction)` : Durée de la note relative à la durée d'un battement, exprimée en fraction (Si aucune signature rythmique n'est notée, la valeur est None).
-- **beat_str** `(string)` : Numéro du temps dans la mesure où se situe la note.
-- **beat_fraction_str** `(Fraction)` : Position relative de la note dans son temps, exprimée en fraction.
-- **beat** `(float)` : Position de la note dans la mesure, exprimée en unités de temps.
-- **songpos** `(float)` : Position de la note dans la chanson, normalisée entre 0.0 (début) et 1.0 (fin).
-- **beatinsong** `(Fraction)` : Position de la note dans la chanson, exprimée en unités de battement (par ex., 27/4 pour une note au 6e temps de la 7e mesure).
-- **nextisrest** `(bool)` : Indique si la note est suivie d'un silence (true / false, la dernière note a None).
-- **restduration_frac** `(Fraction)` : Durée du silence qui suit la note, exprimée en fraction (La valeur est None si aucun silence ne suit).
-- **phrase_ix** `(int)` : Numéro de la phrase musicale à laquelle la note appartient. La première phrase est indexée par 0.
-- **phrasepos** `(float)` : Position relative de la note dans sa phrase, entre 0.0 (début de la phrase) et 1.0 (fin de la phrase).
-- **phrase_end** `(bool)` : Indique si la note est la dernière de la phrase (true ou false).
-- **beatinphrase** `(Fraction)` : Position de la note dans sa phrase, exprimée en unités de battement.
-- **beatinphrase_end** `(Fraction)` : Position relative de la note dans la phrase, exprimée en unités de battement, où la dernière note de la phrase commence au premier battement de la dernière mesure.
-- **gpr2a_Frankland** `(float)` : Force de la frontière musicale suivant la note, calculée selon la règle GPR 2a de la quantification de la théorie GTTM par Frankland et Cohen.
-- **gpr2b_Frankland** `(float)` : Force de la frontière musicale suivant la note, calculée selon la règle GPR 2b de la quantification de la théorie GTTM par Frankland et Cohen.
-- **gpr3a_Frankland** `(float)` : Force de la frontière musicale suivant la note, calculée selon la règle GPR 3a de la quantification de la théorie GTTM par Frankland et Cohen.
-- **gpr3d_Frankland** `(float)` : Force de la frontière musicale suivant la note, calculée selon la règle GPR 3d de la quantification de la théorie GTTM par Frankland et Cohen.
-- **gpr_Frankland_sum** `(float)` : Somme des forces des frontières musicales suivant la note, en combinant les résultats des règles GPR 2a, 2b, 3a et 3d.
-- **lbdm_boundarystrength** `(float)` : Force globale de la frontière locale suivant la note, calculée selon le modèle de détection des frontières locales (Cambouropoulos).
-- **lbdm_spitch** `(float)` : Force de la frontière de hauteur (pitch) suivant la note, selon le modèle LBDM.
-- **lbdm_sioi** `(float)` : Force de la frontière d’intervalle entre les onsets (IOI) suivant la note, selon le modèle LBDM.
-- **lbdm_srest** `(float)` : Force de la frontière de silence suivant la note, selon le modèle LBDM.
-- **lbdm_rpitch** `(float)` : Degré de changement pour l’intervalle de hauteur suivant la note, selon le modèle LBDM.
-- **lbdm_rioi** `(float)` : Degré de changement pour l’intervalle entre onsets (IOI) suivant la note, selon le modèle LBDM.
-- **lbdm_rrest** `(float)` : Degré de changement pour le silence suivant la note, selon le modèle LBDM.
-- **pitchproximity** `(int)` : Expectative de la note basée sur la proximité de hauteur, calculée selon le facteur 1 de la réduction bi-factorielle de l’IR de Narmour par Schellenberg.
-- **pitchreversal** `(float)` : Expectative de la note basée sur l’inversion des hauteurs, calculée selon le facteur 2 de la réduction bi-factorielle de l’IR de Narmour par Schellenberg.
+- **pitch** : Note en notation musicale (format music21).
+- **midipitch** : Valeur MIDI de la hauteur (0 à 108).
+- **pitch40** : Hauteur en base 40.
+- **contour3** : Contour de la hauteur ('-' : Descend, '=' : Égale, '+' : Monte, None pour la 1ère note).
+- **contour5** : Contour détaillé ('--', '-', '=', '+', '++', None pour la 1ère note).
+- **diatonicinterval** : Intervalle diatonique par rapport à la note précédente (en degrés d'échelle, None pour la 1ère note).
+- **chromaticinterval** : Intervalle chromatique (différence MIDI) par rapport à la note précédente (None pour la 1ère note).
+- **tonic** : Tonique de la note (A à G avec altérations).
+- **mode** : Mode musical (majeur, mineur, etc.).
+- **scaledegree** : Degré dans la tonalité (1 à 7).
+- **scaledegreespecifier** : Spécification du degré.
+- **diatonicpitch** : Hauteur diatonique de la note.
+- **timesignature** : Signature rythmique (fraction, None si absente).
+- **beatstrength** : Force métrique de la note (0.0 à 1.0).
+- **metriccontour** : Variation de la force métrique ('-', '=', '+').
+- **imaweight** : Poids métrique interne (0.0 à 1.0).
+- **imacontour** : Variation du poids métrique ('-', '=', '+').
+- **duration** : Durée de la note (en temps).
+- **duration_frac** : Durée en fraction.
+- **duration_fullname** : Nom complet de la durée (ex. 'croche').
+- **durationcontour** : Variation de la durée ('-', '=', '+', None pour la 1ère note).
+- **IOI** : Temps jusqu’à la note suivante (en noires, None pour la dernière).
+- **IOI_frac** : IOI en fraction.
+- **IOR** : Ratio des IOI (None pour la 1ère note).
+- **IOR_frac** : Ratio des IOI en fraction.
+- **onsettick** : Apparition en ticks MIDI (commence à 0).
+- **beatfraction** : Durée relative d’un battement (fraction, None si absente).
+- **beat_str** : Temps dans une mesure.
+- **beat_fraction_str** : Position dans le temps sous forme fractionnaire.
+- **beat** : Position dans la mesure (en temps).
+- **songpos** : Position dans la chanson (0.0 = début, 1.0 = fin).
+- **beatinsong** : Position de la note dans la chanson (en battements, ex. '27/4').
+- **nextisrest** : True si un silence suit, False sinon.
+- **restduration_frac** : Durée du silence suivant en fraction (None si pas de silence).
+- **phrase_ix** : Numéro de la phrase musicale (commence à 0).
+- **phrasepos** : Position relative dans la phrase (0.0 à 1.0).
+- **phrase_end** : True si dernière note de la phrase.
+- **beatinphrase** : Position dans la phrase (en battements).
+- **beatinphrase_end** : Position relative de la dernière note dans la phrase (en battements).
+- **gpr2a_Frankland** : Force de frontière musicale (GPR 2a).
+- **gpr2b_Frankland** : Force de frontière musicale (GPR 2b).
+- **gpr3a_Frankland** : Force de frontière musicale (GPR 3a).
+- **gpr3d_Frankland** : Force de frontière musicale (GPR 3d).
+- **gpr_Frankland_sum** : Somme des forces de frontière musicale.
+- **lbdm_boundarystrength** : Force des frontières locales (Modèle LBDM).
+- **lbdm_spitch** : Force des frontières de hauteur.
+- **lbdm_sioi** : Force des frontières de rythme (onsets).
+- **lbdm_srest** : Force des frontières de silence.
+- **lbdm_rpitch** : Variation de hauteur.
+- **lbdm_rioi** : Variation d’intervalle entre onsets.
+- **lbdm_rrest** : Variation de silence.
+- **pitchproximity** : Attente basée sur la proximité des hauteurs.
+- **pitchreversal** : Attente basée sur l’inversion des hauteurs.
 
-> - **melismastate** `(string)` : Indique si la note fait partie d'un mélisme (plusieurs notes pour une syllabe)
-> - **lyrics** `(string)` : Syllabe de la parole associée à la note.
-> - **noncontentword** `(bool)` : Indique si le mot est un mot fonctionnel (non signifiant) dans la langue néerlandaise.
-> - **wordend** `(bool)` : Indique si la syllabe est la dernière (ou unique) d'un mot. Cette donnée est utilisée uniquement pour la première note d’un mélisme vocal.
-> - **wordstress** `(bool)` : Indique si la syllabe est accentuée dans le mot. Elle s'applique uniquement à la première note d’un mélisme vocal.
-> - **phoneme** `(string)` : Représentation phonétique de la syllabe associée à la note, utilisée uniquement pour la première note d’un mélisme vocal.
-> - **rhymes** `(bool)` : Indique si le mot qui se termine sur cette note rime avec un autre mot dans les paroles de la chanson (Cette donnée est utilisée uniquement pour la première note d’un mélisme vocal).
-> - **rhymescontentwords** `(bool)` : Indique si le mot qui se termine sur cette note rime avec un autre mot (en excluant les mots fonctionnels) dans les paroles de la chanson (Elle est utilisée uniquement pour la première note d’un mélisme vocal).
-
+### Paroles et autres :
+> - **melismastate** : Indique si la note fait partie d’un mélisme (plusieurs notes pour une syllabe).
+> - **lyrics** : Syllabe attachée à la note.
+> - **noncontentword** : True si mot non significatif (en néerlandais), False sinon.
+> - **wordend** : True si la syllabe termine ou constitue un mot.
+> - **wordstress** : True si syllabe accentuée.
+> - **phoneme** : Phonème attaché à la note.
+> - **rhymes** : True si ce mot rime avec un autre dans la chanson.
+> - **rhymescontentwords** : True si rime avec un mot excluant les mots non significatifs.
 ### Modeles 
 
-Pour réaliser se projet, nous allons nous limiter au test d'un nombre limité de modeles. Nous allons travailler sur des modèles vue en cours, et le modèle RandomForestClassifier.
+Pour réaliser ce projet, nous allons nous limiter au test d'un nombre limité de modèles de classification. Nous allons travailler sur des modèles vus en cours, et le modèle RandomForestClassifier.
 
-- **KNeighborsClassifier**: Classification par proximité avec les k-plus-proches voisins
-- **DecisionTreeClassifier**: Arbres de décision pour diviser les données en classes.
-- **SGDClassifier**: Optimisation incrémentale pour les grands ensembles de données.
-- **LogisticRegression**: Classificateur linéaire basé sur la régression logistique.
-- **SVC**: Utilise des marges maximales pour classifier des données, efficace pour les problèmes non linéaires grâce à des noyaux, mais coûteux en temps et mémoire.
-- **GaussianNB**: Naïve Bayes avec distribution gaussienne.
-- **RandomForestClassifier**: Forêt d’arbres de décision pour réduire le surapprentissage.
+- **KNeighborsClassifier**: Ce modèle est basé sur les "k plus proches voisins" (k-nearest neighbors). Il classe un échantillon en fonction des classes des *k* voisins les plus proches dans l'ensemble d'entraînement.
+- **DecisionTreeClassifier**: Ce modèle est basé sur un arbre de décision. Il construit une structure arborescente où les noeuds représentent des décisions basées sur des caractéristiques de données pour séparer les classes.
+- **SGDClassifier**: Ce modèle Utilise la descente de gradient stochastique (SGD) pour classer les données.
+- **LogisticRegression**: Ce modèle statistique estime la probabilité qu'une observation appartienne à une classe particulière en utilisant une fonction logistique.
+- **SVC (Support Vector Classifier)**: Ce modèle utilise les machines à vecteur de support pour classifier les données en maximisant la marge entre les frontières des classes.
+- **GaussianNB**: Ce modèle est un classificateur bayésien naïf basé sur une distribution gaussienne (normale).
+- **RandomForestClassifier**: Ce modèle est un ensemble de plusieurs arbres de décision où chaque arbre est entraîné sur un sous-ensemble aléatoire des données et des caractéristiques.
 
 Avant de valider, nous allons réaliser une vérification du temps d'exécution de l'entraînement et du test de ces derniers.
 
@@ -257,7 +257,9 @@ Nous avons continué cette même démarche d'analyse de matrice de corrélations
 
 ![matrice de corrélation final](/correlation/results/corr_final.svg)
 
-Nous sélectionnons les attributs présents dans cette matrice : "duration", "beatinphrase", "restduration_frac", "beatinphrase_end", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", "imaweight"
+Nous sélectionnons les attributs présents dans cette matrice : "duration", "beatinphrase", "restduration_frac", "beatinphrase_end", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", "imaweight".
+
+Nous avons retiré la feature "phrasepos", car elle identifie directement les fins des phrases en leur donnant la valeur 1.
 
 Dans un premier temps, nous le testons uniquement sur le RandomsForestClassifier, afin de verifier qu'il y ait bien une amélioration des résultats par rapport a la sélection arbitraire.
 
@@ -293,7 +295,7 @@ Nous obtenons donc les résultats suivants:
 ![graphe des scores de chaque modèle en fonction des différentes tailles de sous-séquences](/size/model_size.png)
 
 Ce graphique nous permet de constater que de manière générale, les performances des modèles ont tendance à diminuer lorsque la taille des sous-séquences augmente.
-Cependant tous les modèles ne sont pas autant impactés.
+Cependant, tous les modèles ne sont pas autant impactés.
 
 - RandomForestClassifier: Le modèle reste stable malgré le changement de la taille des sous-séquences, avec des scores constamment élevés et une faible variation. Il semble bien adapté à toutes les tailles de sous-séquences.
 - DecisionTreeClassifier: Le modèle réagit de manière similaire au RandomForestClassifier. Il a un score légèrement plus faible et une petite baisse pour les grandes tailles de sous-séquences.
@@ -302,8 +304,8 @@ Cependant tous les modèles ne sont pas autant impactés.
 - LogisticRegression: Le modèle est stable pour les petites tailles de sous-séquences, mais ses performances diminuent légèrement avec l'augmentation de la taille des sous-séquences.
 - GaussianNB: Le modèle est très dépendant de la taille des sous-séquences. Les scores chutent fortement dès que la taille des sous-séquences augmente.
 
-Les modeles étant plus performants sur des petites tailles de sous séquences, nous allons selectionner une taille de sous séquences de 4.
-Nous ne choissisons pas de generer des sous sequences de taille de 2 avec un decallage de 1, car cela reviendrait a generer toutes les sous séquences possibles, ce qui générerait beacoup de redondance dans les données.
+Les modèles étant plus performants sur des petites tailles de sous-séquences, nous allons sélectionner une taille de sous-séquences de 4.
+Nous ne choisissons pas de générer des sous-séquences de taille de 2 avec un décalage de 1, car cela reviendrait à générer toutes les sous-séquences possibles, ce qui générerait beaucoup de redondance dans les données.
 
 ### 6) Choix des hyperparamètres des modèles
 
@@ -313,62 +315,119 @@ Les hyperparamètres sont des paramètres spécifiques au modèle que nous défi
 Chaque modèle possède ses propres hyperparamètres, mais il n'est pas toujours possible ou nécessaire de tous les tester.
 
 Pour optimiser les hyperparamètres, une méthode couramment utilisée est GridSearchCV(). Cette fonction teste toutes les combinaisons d'hyperparamètres que nous lui fournissons et effectue une validation croisée pour évaluer la performance de chaque configuration.
+NOus réalisons le test avec un quart du jeu de données.
 
 #### RandomForestClassifier
 
 Voici la liste des hyperparamètres du RandomForestClassifier que nous allons tester:
 
-- n_estimators: [100, 200, 500]
-Définit le nombre maximal d'arbres dans la forêt.
-- max_depth: [10, 20, None]
-Spécifie la profondeur maximale des arbres. Une valeur "None" indique qu'il n'y a pas de limite.
-- criterion: ['gini', 'entropy']
-Critère utilisé pour évaluer la qualité de la séparation des branches dans les arbres.
-- class_weight: ['balanced', None]
-Permet de gérer les problèmes liés aux données déséquilibrées en ajustant les poids des classes.
+- n_estimators: [100, 200, 500] -> Définit le nombre maximal d'arbres dans la forêt.
+- max_depth: [10, 20, None] -> Spécifie la profondeur maximale des arbres (None indique qu'il n'y a pas de limite).
+- criterion: ['gini', 'entropy'] -> Critère utilisé pour évaluer la qualité de la séparation des branches dans les arbres.
+- class_weight: ['balanced', None] -> Permet de gérer les problèmes liés aux données déséquilibrées en ajustant les poids des classes.
+
+Les meilleurs hyperparamètres que nous avons trouvés sont: 
+> class_weight=None, criterion='entropy', max_depth=None, n_estimators=200
 
 #### DecisionTreeClassifier
 
 Voici la liste des hyperparamètres du DecisionTreeClassifier que nous allons tester:
 
-- max_depth: [10, 20, None] -> 
-Spécifie la profondeur maximale des arbres (La valeur "None" indique qu'il n'y a pas de limite).
-- criterion: ['gini', 'entropy'] -> 
-Critère utilisé pour évaluer la qualité de la séparation des branches dans les arbres.
-- min_samples_split: [2, 5, 10] -> 
-Détermine le nombre minimal d'échantillons requis pour diviser un nœud interne.
-- class_weight: ['balanced', None] ->
-Permet de gérer les problèmes liés aux données déséquilibrées en ajustant les poids des classes.
+- max_depth: [10, 20, None] -> Spécifie la profondeur maximale des arbres (None indique qu'il n'y a pas de limite).
+- criterion: ['gini', 'entropy'] -> Critère utilisé pour évaluer la qualité de la séparation des branches dans les arbres.
+- min_samples_split: [2, 5, 10] -> Détermine le nombre minimal d'échantillons requis pour diviser un noeud interne.
+- class_weight: ['balanced', None] -> Permet de gérer les problèmes liés aux données déséquilibrées en ajustant les poids des classes.
 
-Les meilleurs hyperparametres sont: 'class_weight': None, 'criterion': 'gini', 'max_depth': 10, 'min_samples_split': 1
+Les meilleurs hyperparamètres que nous avons trouvés sont: 
+> class_weight=None, criterion='gini', max_depth=10, min_samples_split=10
 
 #### KNeighborsClassifier
 
 Voici la liste des hyperparamètres du KNeighborsClassifier que nous allons tester:
 
-- n_neighbors : [3, 5, 10, 15]
-Détermine le nombre de voisins à prendre en compte pour la classification ou la régression.
-- weights : ['uniform', 'distance']
-Spécifie la méthode de pondération des voisins. 'uniform' applique un poids égal à tous les voisins, 'distance' attribue des poids inversement proportionnels à la distance.
-- metric : ['minkowski', 'euclidean', 'manhattan']
-Définit la métrique utilisée pour calculer les distances entre les points.
-- p : [1, 2]
-Spécifie la puissance utilisée pour la métrique Minkowski. Par exemple, p=1 correspond à la distance de Manhattan, et p=2 correspond à la distance euclidienne.
+- n_neighbors: [3, 5, 10, 15] -> Détermine le nombre de voisins à prendre en compte pour la classification.
+- weights: ['uniform', 'distance'] -> Spécifie la méthode de pondération des voisins ('uniform' applique un poids égal à tous les voisins, 'distance' attribue des poids inversement proportionnels à la distance).
+- metric: ['minkowski', 'euclidean', 'manhattan'] -> Définit la métrique utilisée pour calculer les distances entre les points.
+- p: [1, 2] -> Spécifie la puissance utilisée pour la métrique Minkowski. Par exemple, p=1 correspond à la distance de Manhattan, et p=2 correspond à la distance euclidienne.
 
-'metric': 'minkowski', 'n_neighbors': 10, 'p': 1, 'weights': 'distance'
+Les meilleurs hyperparamètres que nous avons trouvés sont: 
+> metric='minkowski', n_neighbors=5, p=1, weights='distance'
 
 #### SGDClassifier
 
+Voici la liste des hyperparamètres du SGDCClassifier que nous allons tester:
+
+- loss: ['squared_error','log_loss'] -> Fonction de perte.
+- alpha: [0.0001, 0.001, 0.01] -> Coefficient de régularisation pour éviter le surapprentissage.
+- class_weight: [None, 'balanced'] -> Permet de gérer les problèmes liés aux données déséquilibrées en ajustant les poids des classes.
+- max_iter: [1000, 2000, 5000] -> Nombre maximal d'itérations pour converger.
+- tol: [1e-3, 1e-4] -> Tolérance pour le critère d'arrêt de l'optimisation.
+
+Les meilleurs hyperparamètres que nous avons trouvés sont: 
+> alpha=0.0001, class_weight=None, loss='log_loss', max_iter=1000, tol=0.001
+
 #### LogisticRegression
 
-    'penalty': ['l1', 'l2'],
-    'C': [0.01, 0.1, 1, 10],
-    'class_weight': [None, 'balanced'],
-    'solver': ['liblinear', 'lbfgs']
+Voici la liste des hyperparamètres du LogisticRegression que nous allons tester:
+
+- penalty': ['l1', 'l2'] -> Type de régularisation (l1 pour Lasso, l2 pour Ridge).  
+- 'C': [0.01, 0.1, 1, 10] -> Inverse de la force de régularisation (plus la valeur est élevée, plus on réduit la pénalisation).
+- class_weight: [None, 'balanced'] -> Permet de gérer les problèmes liés aux données déséquilibrées en ajustant les poids des classes.
+- 'solver': ['liblinear', 'lbfgs'] -> Algorithme d'optimisation (liblinear rapide, lbfgs pour grandes données).
+
+Les meilleurs hyperparamètres que nous avons trouvés sont:
+> C=10, class_weight=None, penalty='l2', solver='liblinear'
 
 #### GaussianNB
 
+Voici la liste des hyperparamètres du GaussianNB que nous allons tester:
+
+- **var_smoothing**: [1e-9, 1e-8, 1e-7, 1e-6] -> Ajoute une petite valeur (lissée) à la variance pour éviter les instabilités numériques.
+- **priors**: [None] -> Probabilités a priori des classes (ptobabilités de chaque classe avant de voir les données).
+- 
+Les meilleurs hyperparamètres que nous avons trouvés sont:
+> priors=None, var_smoothing=1e-06
+
 ### 7) Résultats finaux et Discussion
+
+À l'aide des résultats présent dans `model_test/final`, nous pouvons constater que:
+
+![graphe des f1 score des modèles avec hyperparamètres](/model_test/results/final/models_f1_scores_visualization.png)
+
+L'utilisation d'hyperparamètres sur les modèles améliore, dans la plupart des modèles, la classification.
+
+Modèles améliorés: 
+Pour le modèle KNeighborsClassifier, on a une augmentation du score macro average (0,82 -> 0,85), de manière générale, le modèle est plus performant.
+Pour le modèle SGDClassifier, on constate une forte augmentation du f1 score macro average (0,83 -> 0,88). Le modèle est donc bien plus performant avec les hyperparamètres.
+Pour le modèle de LogisticRegression, on constate une forte augmentation du f1 score macro average (0,87 -> 0,91). Le modèle est donc bien plus performant avec les hyperparamètres.
+
+Modèles similaires:
+Pour le modèle DecisionTreeClassifier, les résultats restent similaires, même avec la configuration des hyperparamètres.
+Pour le modèle GausianNB, les résultats restent similaires, même avec la configuration des hyperparamètres. Ce modèle a toujours les scores les plus bas, il ne semble pas bien adapté à nos données.
+Pour le modèle RandomForestClassifier, les résultats restent similaires, même avec la configuration des hyperparamètres.
+
+D'après nos résultats, le modèle RandomForestClassifier est le meilleur, suivi du DecisionTreeClassifier. Les modèles basés sur des arbres de précision sont les plus performants pour réaliser une classification entre deux classes, dont une majoritaire et une minoritaire.
+[Matrice de confusion finale RandomForestClassifier](/model_test/results/final/confusion_matrix_RandomForestClassifier.png)
+
+*Matrice de confusion finale RandomForestClassifier* 
+
+La répartition de la matrice de confusion est correcte, même si le modèle a un peu plus de mal à gérer les faux positifs.
+
+[Courbe ROC RandomForestClassfier](/model_test/results/final/roc_curve_RandomForestClassifier.png)
+
+La courbe ROC du modèle indique une performance quasiment optimale, cela s'explique par la présence du déséquilibre entre les classes.
+Cependant, elle peut aussi indiquer que le modèle surprend nos données, pour vérifier ça, nous pouvons réaliser une validation croisée.
+
+Résultats de la validation croisée avec 5 plis.
+`0.98256255, 0.9841129 , 0.98544748, 0.98476022, 0.98310598`
+
+Nous pouvons constater que les scores sont très proches. Cela montre qu'il n'y a pas de surapprentissage du modèle. Le faible écart type montre aussi qu'il y a une faible variance, cela montre que le modèle est bien précis de manière constante.
+
+Nous pouvons donc arriver à la conclusion que les features sélectionnées permettent aux modèles de très classer nos sous-séquences fin de phrases malgré le déséquilibre.
+
+Nous pouvons essayer d'améliorer la performance des modèles, en essayant plus d'hyperparamètres différents. Nous pouvons aussi essayer de jouer sur la taille des décalages, car ici la taille de décalage testé est toujours 2.
+Nous pouvons aussi essayer d'autres méthodes de choix des features, en utilisant par exemple le modèle RandomForestClassifier qui peut nous donner les features les plus importantes. Nous pouvons aussi utiliser la feature 
+Nous pouvons aussi essayer d'autres modèles de machine learning tels qu'un réseau de neurones.
 
 ## Programme et scripts
 

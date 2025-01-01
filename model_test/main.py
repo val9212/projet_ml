@@ -99,12 +99,12 @@ if __name__ == "__main__":
     selected_columns = ["duration", "beatinphrase", 'restduration_frac', "beatinphrase_end", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", 'imaweight']
 
     models = [
-        (KNeighborsClassifier(), "KNeighborsClassifier"),
-        (DecisionTreeClassifier(), "DecisionTreeClassifier"),
-        (SGDClassifier(), "SGDClassifier"),
-        (LogisticRegression(), "LogisticRegression"),
-        (GaussianNB(), "GaussianNB"),
-        (RandomForestClassifier(),"RandomForestClassifier",),
+        (KNeighborsClassifier(metric='minkowski', n_neighbors=5, p=1, weights='distance'), "KNeighborsClassifier"),
+        (DecisionTreeClassifier(class_weight=None, criterion='entropy', max_depth=10, min_samples_split= 10), "DecisionTreeClassifier"),
+        (SGDClassifier(alpha=0.0001, class_weight=None, loss='log_loss', max_iter=1000, tol=0.001), "SGDClassifier"),
+        (LogisticRegression(C=10, class_weight=None, penalty='l2', solver='liblinear'), "LogisticRegression"),
+        (GaussianNB(priors=None, var_smoothing=1e-06), "GaussianNB"),
+        (RandomForestClassifier(class_weight=None, criterion='gini', max_depth=None, n_estimators=500),"RandomForestClassifier",),
     ]
 
     main(size, step, selected_columns, models, refactor, cat_columns, norm_column)
