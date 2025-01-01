@@ -224,8 +224,8 @@ Pour ce faire, nous prenons autant de sous-séquences qui sont des fins de phras
 
 ![graphe montrant les f1 score "macro average" des modèles avec les données d'entrainement équilibrées](/model_test/results/arbitraire/models_f1_scores_balanced.png)
 
-L'équilibrage des données d'entraînement n'a pas permis d'améliorer les résultats, pour la majorité des modèles, il réduit même les scores. On peut l'expliquer par l'augmentation du déséquilibre.
-Les modèles ont tendance à classer la majorité des sous-séquences comme n'étant pas des fins de phrases. 
+L'équilibrage des données d'entraînement n'a pas permis d'améliorer les résultats ; pour la majorité des modèles, il réduit même les scores. On peut l'expliquer car le modèle a moins d'informations concernant les séquences qui ne sont pas des fins de phrase, l'empêchant ainsi de bien les classer correctement.
+Les modèles vont avoir tendance à classer la majorité des sous-séquences comme n'étant pas des fins de phrases. 
 
 ![Matrice de confusion pour le RandomForestClassifier avec les données d'entrainement équilibrées](/model_test/results/arbitraire/equilibre/confusion_matrix_RandomForestClassifier.png)
 
@@ -316,7 +316,7 @@ Les hyperparamètres sont des paramètres spécifiques au modèle que nous défi
 Chaque modèle possède ses propres hyperparamètres, mais il n'est pas toujours possible ou nécessaire de tous les tester.
 
 Pour optimiser les hyperparamètres, une méthode couramment utilisée est GridSearchCV(). Cette fonction teste toutes les combinaisons d'hyperparamètres que nous lui fournissons et effectue une validation croisée pour évaluer la performance de chaque configuration.
-Nous réalisons le test avec un quart du jeu de données.
+Nous réalisons le test avec un quart du jeu de données, Et nous ne testons pas tous les hyperparamètres disponibles pour chaque modèle.
 
 #### RandomForestClassifier
 
