@@ -15,7 +15,6 @@ Pour répondre aux objectifs de ce projet, nous avons récupéré des données i
 un corpus de mélodies des Pays-Bas annotés par un ensemble d'attributs : 
 Un objet mélodique contient des champs de métadonnées et plusieurs séquences de valeurs de caractéristiques.
 
-
 Les champs de métadonnées sont : 
 
 - **id** `(string)`: Identifiant unique de la mélodie.
@@ -27,7 +26,7 @@ Les champs de métadonnées sont :
 - **ann_bgcorpus** `(bool)`: Spécifie si la mélodie est indépendante des chansons d'un autre corpus, en l'occurrence MTC-ANN-2.0.1 (True / False).
 - **origin** `(string)`: Indique le chemin du fichier kern dans la collection ESSEN.
 
-Les séquences caractéristiques correspondent aux séquences de notes dans une mélodie donnée. Elles renseignent sur les 61 caractéristiques distinctes: 
+Les séquences caractéristiques/features correspondent aux séquences de notes dans une mélodie donnée. Elles renseignent sur les 61 features distinctes: 
 
 - **pitch** : Note en notation musicale (format music21).
 - **midipitch** : Valeur MIDI de la hauteur (0 à 108).
@@ -253,7 +252,7 @@ Nous avons decider de supprimer les versions sous forme de fraction : 'duration_
 
 Nous avons aussi identifié d'autres features avec des corrélations élevées, nous les avons enlevées : "diatonicinterval", "midipitch", "beat_str", car elles sont très fortement corrélées avec d'autres features.
 
-Nous avons continué cette même démarche d'analyse de matrice de corrélations jusqu'à obtenir une matrice de correlation simplifiée.
+Nous avons continué cette même démarche d'analyse de matrice de corrélations jusqu'à obtenir une matrice de correlation simplifiée. En enlevant aussi les features qui ne sont pas corrélées avec notre target.
 
 ![matrice de corrélation final](/correlation/results/corr_final.svg)
 
@@ -315,7 +314,7 @@ Les hyperparamètres sont des paramètres spécifiques au modèle que nous défi
 Chaque modèle possède ses propres hyperparamètres, mais il n'est pas toujours possible ou nécessaire de tous les tester.
 
 Pour optimiser les hyperparamètres, une méthode couramment utilisée est GridSearchCV(). Cette fonction teste toutes les combinaisons d'hyperparamètres que nous lui fournissons et effectue une validation croisée pour évaluer la performance de chaque configuration.
-NOus réalisons le test avec un quart du jeu de données.
+Nous réalisons le test avec un quart du jeu de données.
 
 #### RandomForestClassifier
 
@@ -383,7 +382,7 @@ Les meilleurs hyperparamètres que nous avons trouvés sont:
 Voici la liste des hyperparamètres du GaussianNB que nous allons tester:
 
 - **var_smoothing**: [1e-9, 1e-8, 1e-7, 1e-6] -> Ajoute une petite valeur (lissée) à la variance pour éviter les instabilités numériques.
-- **priors**: [None] -> Probabilités a priori des classes (ptobabilités de chaque classe avant de voir les données).
+- **priors**: [None] -> Probabilités a priori des classes (probabilités de chaque classe avant de voir les données).
 - 
 Les meilleurs hyperparamètres que nous avons trouvés sont:
 > priors=None, var_smoothing=1e-06
