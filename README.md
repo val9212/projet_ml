@@ -1,13 +1,13 @@
 # Prédiction de fins de phrases musicales
 
-## OBJECTIFS : 
+## OBJECTIFS: 
 Une séquence musicale peut être jouée ou écrite, comme on peut énoncer un texte ou l'écrire. Comme un texte, une séquence musicale est
 Structurée. Cette structure peut se décrire comme une suite de phrases. De ce fait, il est possible de déterminer toutes les fins 
 De phrases à l'aide de nombreux facteurs. Évidemment, nous ne réaliserons pas ce travail à la main en écoutant chaque morceau, nous allons utiliser des corpus annotés. En les utilisant, nous pouvons mettre en place des algorithmes d'apprentissage capables de prédire les fins de phrases.
 
 Ainsi, l'objectif de ce projet est de préparer des données, les explorer, construire et comparer des modèles prédictifs de fin de phrase musicale.
 
-## MATERIELS : 
+## MATÉRIELS: 
 
 ### Jeu de données
 
@@ -82,7 +82,7 @@ Les séquences caractéristiques/features correspondent aux séquences de notes 
 - **pitchproximity** : Attente basée sur la proximité des hauteurs.
 - **pitchreversal** : Attente basée sur l’inversion des hauteurs.
 
-### Paroles et autres :
+> Features concernant les paroles:
 > - **melismastate** : Indique si la note fait partie d’un mélisme (plusieurs notes pour une syllabe).
 > - **lyrics** : Syllabe attachée à la note.
 > - **noncontentword** : True si mot non significatif (en néerlandais), False sinon.
@@ -91,7 +91,9 @@ Les séquences caractéristiques/features correspondent aux séquences de notes 
 > - **phoneme** : Phonème attaché à la note.
 > - **rhymes** : True si ce mot rime avec un autre dans la chanson.
 > - **rhymescontentwords** : True si rime avec un mot excluant les mots non significatifs.
-### Modeles 
+
+
+### Modèles 
 
 Pour réaliser ce projet, nous allons nous limiter au test d'un nombre limité de modèles de classification. Nous allons travailler sur des modèles vus en cours, et le modèle RandomForestClassifier.
 
