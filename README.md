@@ -398,11 +398,13 @@ Les meilleurs hyperparamètres que nous avons trouvés sont:
 L'utilisation d'hyperparamètres sur les modèles améliore, dans la plupart des modèles, la classification.
 
 Modèles améliorés: 
+
 Pour le modèle KNeighborsClassifier, on a une augmentation du score macro average (0,82 -> 0,85), de manière générale, le modèle est plus performant.
 Pour le modèle SGDClassifier, on constate une forte augmentation du f1 score macro average (0,83 -> 0,88). Le modèle est donc bien plus performant avec les hyperparamètres.
 Pour le modèle de LogisticRegression, on constate une forte augmentation du f1 score macro average (0,87 -> 0,91). Le modèle est donc bien plus performant avec les hyperparamètres.
 
 Modèles similaires:
+
 Pour le modèle DecisionTreeClassifier, les résultats restent similaires, même avec la configuration des hyperparamètres.
 Pour le modèle GausianNB, les résultats restent similaires, même avec la configuration des hyperparamètres. Ce modèle a toujours les scores les plus bas, il ne semble pas bien adapté à nos données.
 Pour le modèle RandomForestClassifier, les résultats restent similaires, même avec la configuration des hyperparamètres.
