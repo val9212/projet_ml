@@ -426,11 +426,11 @@ Résultats de la validation croisée avec 5 plis.
 
 Nous pouvons constater que les scores sont très proches. Cela montre qu'il n'y a pas de surapprentissage du modèle. Le faible écart type montre aussi qu'il y a une faible variance, cela montre que le modèle est bien précis de manière constante.
 
-Nous pouvons donc arriver à la conclusion que les features sélectionnées permettent aux modèles de très classer nos sous-séquences fin de phrases malgré le déséquilibre.
+Nous pouvons donc arriver à la conclusion que les features sélectionnées permettent aux modèles de très classer bien nos sous-séquences fin de phrases malgré le déséquilibre.
 
 Nous pouvons essayer d'améliorer la performance des modèles, en essayant plus d'hyperparamètres différents. Nous pouvons aussi essayer de jouer sur la taille des décalages, car ici la taille de décalage testé est toujours 2.
-Nous pouvons aussi essayer d'autres méthodes de choix des features, en utilisant par exemple le modèle RandomForestClassifier qui peut nous donner les features les plus importantes. Nous pouvons aussi essayer d'utiliser les features catégorielles en utilisant une autre méthode d'encodage. 
-Nous pouvons aussi essayer d'autres modèles de machine learning tels qu'un réseau de neurones.
+Nous pouvons aussi essayer d'autres méthodes de choix des features, en utilisant par exemple le modèle RandomForestClassifier qui peut nous donner les features les plus importantes. Nous pouvons aussi essayer d'utiliser les features catégorielles en utilisant une autre méthode d'encodage que le One-Hot. 
+Il serait aussi intéressant d'essayer d'autres modèles de machine learning tels qu'un modèle utilisant un réseau de neurones.
 
 ## Programme et scripts
 
