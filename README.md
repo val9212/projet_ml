@@ -224,7 +224,7 @@ Pour ce faire, nous prenons autant de sous-séquences qui sont des fins de phras
 
 ![graphe montrant les f1 score "macro average" des modèles avec les données d'entrainement équilibrées](/model_test/results/arbitraire/models_f1_scores_balanced.png)
 
-L'équilibrage des données d'entraînement n'a pas permis d'améliorer les résultats ; pour la majorité des modèles, il réduit même les scores. On peut l'expliquer car le modèle a moins d'informations concernant les séquences qui ne sont pas des fins de phrase, l'empêchant ainsi de bien les classer correctement.
+L'équilibrage des données d'entraînement n'a pas permis d'améliorer les résultats ; pour la majorité des modèles, il réduit même les scores. On peut l'expliquer car le modèle a moins d'informations concernant les séquences qui ne sont pas des fins de phrase, l'empêchant donc de bien les classer correctement.
 Les modèles vont avoir tendance à classer la majorité des sous-séquences comme n'étant pas des fins de phrases. 
 
 ![Matrice de confusion pour le RandomForestClassifier avec les données d'entrainement équilibrées](/model_test/results/arbitraire/equilibre/confusion_matrix_RandomForestClassifier.png)
@@ -238,7 +238,7 @@ Pour améliorer nos résultats, nous avons exploré une autre méthode plus pré
 #### b) Matrice de corrélations (correlation/global et correlation/numérique):
 L'utilisation de quatre features choisies arbitrairement a montré des limites. Nous avons décidé d'utiliser des matrices de corrélation pour identifier les features les plus significatives.
 Ces matrices permettent d’évaluer les relations linéaires entre les features et la cible, en calculant le coefficient de corrélation de Pearson. 
-Elles permettent également d’identifier les features fortement corrélées entre elles, ce qui nous permet d'éviter les informations redondantes. Ainsi, cette approche a permis de sélectionner les variables pertinentes, simplifiant le modèle et améliorant ses performances.
+Elles permettent également d’identifier les features fortement corrélées entre elles, ce qui nous permet d'éviter les informations redondantes. Cette approche a permis de sélectionner les variables pertinentes, simplifiant le modèle et améliorant ses performances.
 
 Pour réaliser nos matrices de correlations, nous commençons par exploser nos listes, afin d'avoir une ligne par note.
 Puis, nous devons reformater les features catégorielles, et les features en fraction en valeurs numériques.
@@ -315,8 +315,8 @@ Il est possible d'améliorer les performances de nos modèles en ajustant leurs 
 Les hyperparamètres sont des paramètres spécifiques au modèle que nous définissons manuellement, car ils ne sont pas appris à partir des données. 
 Chaque modèle possède ses propres hyperparamètres, mais il n'est pas toujours possible ou nécessaire de tous les tester.
 
-Pour optimiser les hyperparamètres, une méthode couramment utilisée est GridSearchCV(). Cette fonction teste toutes les combinaisons d'hyperparamètres que nous lui fournissons et effectue une validation croisée pour évaluer la performance de chaque configuration.
-Nous réalisons le test avec un quart du jeu de données, Et nous ne testons pas tous les hyperparamètres disponibles pour chaque modèle.
+Pour optimiser les hyperparamètres, nous avons utilisé GridSearchCV(). Cette fonction teste toutes les combinaisons d'hyperparamètres que nous lui fournissons et effectue une validation croisée pour évaluer la performance de chaque configuration.
+Nous réalisons le test avec un quart du jeu de données, et nous ne testons pas tous les hyperparamètres disponibles pour chaque modèle.
 
 #### RandomForestClassifier
 
