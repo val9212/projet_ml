@@ -389,6 +389,9 @@ Voici la liste des hyperparamètres du GaussianNB que nous allons tester:
 Les meilleurs hyperparamètres que nous avons trouvés sont:
 > priors=None, var_smoothing=1e-06
 
+De manière générale, les scores sont améliorés ou similaires en ajoutant les hyperparamètres, par rapport à nos premiers tests. Cependant, nos premiers tests étaient sur le jeu complet.
+Nous allons donc désormais tester ces hyperparamètres sur le jeu de données complet.
+
 ### 7) Résultats finaux et Discussion
 
 À l'aide des résultats présent dans `model_test/final`, nous pouvons constater que:
@@ -419,14 +422,14 @@ La répartition de la matrice de confusion est correcte, même si le modèle a u
 ![Courbe ROC RandomForestClassfier](/model_test/results/final/roc_curve_RandomForestClassifier.png)
 
 La courbe ROC du modèle indique une performance quasiment optimale, cela s'explique par la présence du déséquilibre entre les classes.
-Cependant, elle peut aussi indiquer que le modèle surprend nos données, pour vérifier ça, nous pouvons réaliser une validation croisée.
+Cependant, elle peut aussi indiquer que le modèle surapprend nos données, pour vérifier ça, nous pouvons réaliser une validation croisée.
 
 Résultats de la validation croisée avec 5 plis.
 `0.98256255, 0.9841129 , 0.98544748, 0.98476022, 0.98310598`
 
 Nous pouvons constater que les scores sont très proches. Cela montre qu'il n'y a pas de surapprentissage du modèle. Le faible écart type montre aussi qu'il y a une faible variance, cela montre que le modèle est bien précis de manière constante.
 
-Nous pouvons donc arriver à la conclusion que les features sélectionnées permettent aux modèles de très classer bien nos sous-séquences fin de phrases malgré le déséquilibre.
+Nous pouvons donc arriver à la conclusion que les features sélectionnées permettent aux modèles de très bien classer nos sous-séquences fin de phrases malgré le déséquilibre.
 
 Nous pouvons essayer d'améliorer la performance des modèles, en essayant plus d'hyperparamètres différents. Nous pouvons aussi essayer de jouer sur la taille des décalages, car ici la taille de décalage testé est toujours 2.
 Nous pouvons aussi essayer d'autres méthodes de choix des features, en utilisant par exemple le modèle RandomForestClassifier qui peut nous donner les features les plus importantes. Nous pouvons aussi essayer d'utiliser les features catégorielles en utilisant une autre méthode d'encodage que le One-Hot. 
