@@ -260,7 +260,7 @@ Nous avons continué cette même démarche d'analyse de matrice de corrélations
 
 Nous sélectionnons les attributs présents dans cette matrice : "duration", "beatinphrase", "restduration_frac", "beatinphrase_end", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", "imaweight".
 
-Nous avons retiré la feature "phrasepos", car elle identifie directement les fins des phrases en leur donnant la valeur 1. Nous pouvons constater que les features restantes ne sont pas assez corréllées pour provoquer une fuite de données qui pourrait biaiser les résultats de notre modèle. 
+Nous avons retiré la feature "phrasepos", car elle identifie directement les fins des phrases en leur donnant la valeur 1. Nous pouvons constater que les features restantes ne sont pas assez corréllées pour provoquer une fuite de données qui pourrait biaiser les résultats de notre modèle.
 
 Dans un premier temps, nous le testons uniquement sur le RandomsForestClassifier, afin de verifier qu'il y ait bien une amélioration des résultats par rapport a la sélection arbitraire.
 
@@ -428,6 +428,9 @@ Résultats de la validation croisée avec 5 plis.
 `0.98256255, 0.9841129 , 0.98544748, 0.98476022, 0.98310598`
 
 Nous pouvons constater que les scores sont très proches. Cela montre qu'il n'y a pas de surapprentissage du modèle. Le faible écart type montre aussi qu'il y a une faible variance, cela montre que le modèle est bien précis de manière constante.
+
+Nous avons testé d'enlever la feature la plus corrélée à notre target (lbdm_boundarystrength), pour s'assurer qu'elle ne biaise pas nos résultats. Nous ne constatons pas de différences majeures dans les résultats. 
+Nous avons réalisé un test similaire sur la feature beatinphrase_end, dans ce cas-là le modèle a plus de mal à prédire les fins de phrases, la précision pour la prédiction de fin de phrases passe de 0.95 à 0.87. Cela montre que cette feature est importante pour la prédiction de nos modèles, mais qu'elle ne biaise pas leurs résultats. 
 
 Nous pouvons donc arriver à la conclusion que les features sélectionnées permettent aux modèles de très bien classer nos sous-séquences fin de phrases malgré le déséquilibre.
 
