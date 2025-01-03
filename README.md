@@ -65,8 +65,8 @@ Les séquences caractéristiques/features correspondent aux séquences de notes 
 - **phrase_ix** : Numéro de la phrase musicale (commence à 0).
 - **phrasepos** : Position relative dans la phrase (0.0 à 1.0).
 - **phrase_end** : True si dernière note de la phrase.
-- **beatinphrase** : Position dans la phrase (en battements).
-- **beatinphrase_end** : Position relative de la dernière note dans la phrase (en battements).
+- **beatinphrase** : Moment d’apparition de la note dans la phrase à partir du début (en battements).
+- **beatinphrase_end** : Moment d’apparition de la note dans la phrase à partir de la fin (en battements).
 - **gpr2a_Frankland** : Force de frontière musicale (GPR 2a).
 - **gpr2b_Frankland** : Force de frontière musicale (GPR 2b).
 - **gpr3a_Frankland** : Force de frontière musicale (GPR 3a).
@@ -260,7 +260,7 @@ Nous avons continué cette même démarche d'analyse de matrice de corrélations
 
 Nous sélectionnons les attributs présents dans cette matrice : "duration", "beatinphrase", "restduration_frac", "beatinphrase_end", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", "imaweight".
 
-Nous avons retiré la feature "phrasepos", car elle identifie directement les fins des phrases en leur donnant la valeur 1.
+Nous avons retiré la feature "phrasepos", car elle identifie directement les fins des phrases en leur donnant la valeur 1. Nous pouvons constater que les features restantes ne sont pas assez corréllées pour provoquer une fuite de données qui pourrait biaiser les résultats de notre modèle. 
 
 Dans un premier temps, nous le testons uniquement sur le RandomsForestClassifier, afin de verifier qu'il y ait bien une amélioration des résultats par rapport a la sélection arbitraire.
 
