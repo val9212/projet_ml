@@ -400,6 +400,15 @@ Nous allons donc désormais tester ces hyperparamètres sur le jeu de données c
 
 L'utilisation d'hyperparamètres sur les modèles améliore, dans la plupart des modèles, la classification.
 
+| **Modèle**                   | **Avec Hyperparamètres**                                    | **Sans Hyperparamètres**                                    |
+|------------------------------|-----------------------------------------------------------|-----------------------------------------------------------|
+| **KNeighborsClassifier**    | **Précision**: 0.96 / 0.86<br>**Rappel**: 0.99 / 0.65<br>**F1 (macro)**: 0.91<br>**Exactitude**: 0.96 | **Précision**: 0.96 / 0.80<br>**Rappel**: 0.98 / 0.57<br>**F1 (macro)**: 0.82<br>**Exactitude**: 0.95 |
+| **DecisionTreeClassifier**  | **Précision**: 0.99 / 0.92<br>**Rappel**: 0.99 / 0.86<br>**F1 (macro)**: 0.94<br>**Exactitude**: 0.98 | **Précision**: 0.99 / 0.88<br>**Rappel**: 0.99 / 0.88<br>**F1 (macro)**: 0.93<br>**Exactitude**: 0.98 |
+| **SGDClassifier**           | **Précision**: 0.99 / 0.73<br>**Rappel**: 0.97 / 0.87<br>**F1 (macro)**: 0.88<br>**Exactitude**: 0.96 | **Précision**: 1.00 / 0.54<br>**Rappel**: 0.92 / 0.97<br>**F1 (macro)**: 0.82<br>**Exactitude**: 0.92 |
+| **LogisticRegression**      | **Précision**: 0.98 / 0.87<br>**Rappel**: 0.99 / 0.80<br>**F1 (macro)**: 0.91<br>**Exactitude**: 0.97 | **Précision**: 0.97 / 0.80<br>**Rappel**: 0.98 / 0.72<br>**F1 (macro)**: 0.87<br>**Exactitude**: 0.96 |
+| **GaussianNB**              | **Précision**: 0.99 / 0.28<br>**Rappel**: 0.75 / 0.94<br>**F1 (macro)**: 0.65<br>**Exactitude**: 0.77 | **Précision**: 0.99 / 0.29<br>**Rappel**: 0.76 / 0.94<br>**F1 (macro)**: 0.65<br>**Exactitude**: 0.78 |
+| **RandomForestClassifier**  | **Précision**: 0.99 / 0.95<br>**Rappel**: 0.99 / 0.90<br>**F1 (macro)**: 0.96<br>**Exactitude**: 0.99 | **Précision**: 0.99 / 0.95<br>**Rappel**: 0.99 / 0.91<br>**F1 (macro)**: 0.96<br>**Exactitude**: 0.99 |
+
 Modèles améliorés: 
 
 - Pour le modèle KNeighborsClassifier, on a une augmentation du score macro average (0,82 -> 0,85), de manière générale, le modèle est plus performant.
