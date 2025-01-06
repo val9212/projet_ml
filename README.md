@@ -260,7 +260,7 @@ Nous avons continué cette même démarche d'analyse de matrice de corrélations
 
 Nous sélectionnons les attributs présents dans cette matrice : "duration", "beatinphrase", "restduration_frac", "beatinphrase_end", "beatstrength", "gpr2b_Frankland", "gpr_Frankland_sum", "lbdm_srest", "lbdm_boundarystrength", "pitch40", "imaweight".
 
-Nous avons retiré la feature "phrasepos", car elle identifie directement les fins des phrases en leur donnant la valeur 1. Nous pouvons constater que les features restantes ne sont pas assez corréllées pour provoquer une fuite de données qui pourrait biaiser les résultats de notre modèle.
+Nous avons retiré la feature "phrasepos", car elle identifie directement les fins des phrases en leur donnant la valeur 1. Nous pouvons constater que les features restantes ne sont pas assez corrélées pour provoquer une fuite de données qui pourrait biaiser les résultats de notre modèle.
 
 Dans un premier temps, nous le testons uniquement sur le RandomsForestClassifier, afin de verifier qu'il y ait bien une amélioration des résultats par rapport a la sélection arbitraire.
 
