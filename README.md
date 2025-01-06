@@ -439,7 +439,8 @@ Résultats de la validation croisée avec 5 plis.
 Nous pouvons constater que les scores sont très proches. Cela montre qu'il n'y a pas de surapprentissage du modèle. Le faible écart type montre aussi qu'il y a une faible variance, cela montre que le modèle est bien précis de manière constante.
 
 Nous avons testé d'enlever la feature la plus corrélée à notre target (lbdm_boundarystrength), pour s'assurer qu'elle ne biaise pas nos résultats. Nous ne constatons pas de différences majeures dans les résultats. 
-Nous avons réalisé un test similaire sur la feature beatinphrase_end, dans ce cas-là le modèle a plus de mal à prédire les fins de phrases, la précision pour la prédiction de fin de phrases passe de 0.95 à 0.87. Cela montre que cette feature est importante pour la prédiction de nos modèles, mais qu'elle ne biaise pas leurs résultats. 
+Nous avons réalisé un test similaire sur les features beatinphrase_end et beatinphrase, dans ce cas-là le modèle a plus de mal à prédire les fins de phrases, la précision pour la prédiction de fin de phrases passe de 0.95 à 0.87. Cela montre que ces features sont importantes pour la prédiction de nos modèles, mais qu'elles ne biaisent pas leurs résultats en donnant directement l'information de notre cible. 
+
 
 Nous pouvons donc arriver à la conclusion que les features sélectionnées permettent aux modèles de très bien classer nos sous-séquences fin de phrases malgré le déséquilibre.
 
