@@ -1,0 +1,65 @@
+Model: KNeighborsClassifier
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.96      0.99      0.98    189064
+           1       0.86      0.65      0.74     19491
+
+    accuracy                           0.96    208555
+   macro avg       0.91      0.82      0.86    208555
+weighted avg       0.96      0.96      0.96    208555
+
+Model: DecisionTreeClassifier
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.99      0.99      0.99    189064
+           1       0.92      0.86      0.89     19491
+
+    accuracy                           0.98    208555
+   macro avg       0.95      0.93      0.94    208555
+weighted avg       0.98      0.98      0.98    208555
+
+Model: SGDClassifier
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.99      0.97      0.98    189064
+           1       0.73      0.87      0.79     19491
+
+    accuracy                           0.96    208555
+   macro avg       0.86      0.92      0.88    208555
+weighted avg       0.96      0.96      0.96    208555
+
+Model: LogisticRegression
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.98      0.99      0.98    189064
+           1       0.87      0.80      0.83     19491
+
+    accuracy                           0.97    208555
+   macro avg       0.93      0.89      0.91    208555
+weighted avg       0.97      0.97      0.97    208555
+
+Model: GaussianNB
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.99      0.75      0.86    189064
+           1       0.28      0.94      0.43     19491
+
+    accuracy                           0.77    208555
+   macro avg       0.64      0.85      0.65    208555
+weighted avg       0.93      0.77      0.82    208555
+
+Model: RandomForestClassifier
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.99      0.99      0.99    189064
+           1       0.95      0.90      0.92     19491
+
+    accuracy                           0.99    208555
+   macro avg       0.97      0.95      0.96    208555
+weighted avg       0.99      0.99      0.99    208555

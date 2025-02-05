@@ -1,0 +1,22 @@
+résultats sans
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.97      0.99      0.98    189064
+           1       0.87      0.69      0.77     19491
+
+    accuracy                           0.96    208555
+   macro avg       0.92      0.84      0.87    208555
+weighted avg       0.96      0.96      0.96    208555
+
+résultats avec
+Model: RandomForestClassifier
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.99      0.99      0.99    189064
+           1       0.95      0.90      0.92     19491
+
+    accuracy                           0.99    208555
+   macro avg       0.97      0.95      0.96    208555
+weighted avg       0.99      0.99      0.99    208555
